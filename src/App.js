@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
-import Auth from './components/Auth';
-import Chat from './components/Chat';
+import Auth from './components/Auth/Auth';
+import Chat from './components/Chat/Chat';
 import {BrowserRouter, Route, Redirect} from 'react-router-dom';
 
 
@@ -19,8 +19,5 @@ class App extends React.Component {
     );
   }
 }
-
-
- 
 
 export default App;
