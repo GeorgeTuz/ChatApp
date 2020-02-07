@@ -1,19 +1,47 @@
 .messages {
     display: flex;
     flex-direction: column;
-    width: 400px;
-    height: 200px;
-    border: 1px solid gray;
+    width: 700px;
+    height: 85vh;
     margin: 0 auto;
-    overflow: scroll;
+    overflow: auto;
+    background-color: rgb(236, 247, 250);
+}
+
+.input-chat {
+    display: flex;
+    width: 700px;
+    margin: 0 auto;
+    background-color: rgb(248, 248, 248);
+}
+
+.form-chat {
+    display: flex;
+    justify-content: center;
+}
+
+.form-chat .MuiFormControl-marginNormal {
+    padding-top: 18px;
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 .user-message {
     align-self: flex-end;
+    padding: 15px;
+    margin: 5px;
+    color: white;
+    background-color: rgb(196, 113, 196);
+    border-radius: 13px 13px 0px 13px;
 }
 
 .just-message {
-    float: left;
+    align-self: flex-start;
+    padding: 15px;
+    margin: 5px;
+    color: white;
+    background-color: rgb(113, 173, 196);
+    border-radius: 13px 13px 13px 0px;
 }
 
 .chat-form {

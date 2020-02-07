@@ -1,13 +1,15 @@
 import React from 'react';
 import './Chat.css';
+import TextField from '@material-ui/core/TextField';
+import Box from '@material-ui/core/Box';
+
 let userId = localStorage.getItem('userId');
 let userName = localStorage.getItem('userName');
 
 class Chat extends React.Component {
     constructor(props) {
     super(props);
-    this.state = {newMessage: '', messages:[]};
-
+    this.state = {newMessage: '', messages:[], buttomMessage: ''};
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -48,6 +50,7 @@ class Chat extends React.Component {
         "userName": userName
       })
     });
+
     await fetch('http://localhost:4000/api/messages', {
       method: 'GET',
       headers: myHeaders,
@@ -60,20 +63,35 @@ class Chat extends React.Component {
     })
     this.setState({ newMessage: '' })
   }
+
+    
   
     render() {
-      
+
       return (
         <div className="chat">
-          <div className="messages">
-          {this.state.messages.map(message => {
-            return (message.userId === userId) ? <div className="user-message">{message.message}</div> :
-              <div className="just-message">{message.message}</div>
+          <Box className='messages'>
+            {this.state.messages.map(message => {
+              return (message.userId === userId) ? <div className="user-message mess">{message.message}</div> :
+                <div className="just-message mess">{message.message}</div>
+            })}
+          </Box>
           
-          })}
+          <form className="form-chat" onSubmit={this.handleSubmit}>
+            <TextField
+              className='input-chat'
+              margin="normal"
+              id="message"
+              name="text"
+              autoFocus 
+              value={this.state.userName} 
+              onChange={this.handleChange}
+            />
+          </form>
 
-          </div>
+
           <form onSubmit={this.handleSubmit} className="chat-form">
+            
             <input type="text" value={this.state.newMessage} onChange={this.handleChange} />
             <input type="submit" value="Submit" />
           </form>
