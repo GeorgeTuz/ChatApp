@@ -4,15 +4,12 @@ const Schema  = mongoose.Schema;
 const MessageSchema = new Schema(
     {
         id: String,
-        user_id: String,
-        // user_id: { 
-        //     type: mongoose.Schema.Types.ObjectId, 
-        //     ref: 'User'
-        // },
+        userId: String,
+        userName: String,
         message: String,
-        created_at: Date,
-        updated_at: Date,
-        message: String 
+        createdAt: Date,
+        updatedAt: Date,
+        message: String,
     }
 );
 

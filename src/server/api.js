@@ -6,8 +6,9 @@ const uuidv1 = require('uuid/v1');
 
 
 router.get("/users", (req,res)=>{
-    User.find({}).then(user =>{
-        res.send(user);
+    User.find({}).then((users) =>{
+        const newUsers = users.map(({id, name}) => ({id, name}))
+        res.send(newUsers);
     })
 });
 
@@ -37,19 +38,24 @@ router.delete("/user/:id", (req,res)=>{
 });
 
 router.get("/messages", (req,res)=>{
-    Message.find({}).then(message =>{
-        res.send(message)
+    Message.find({}).then(messages =>{
+        const newMessages = messages.map(({id, userId, userName, message, createdAt, updatedAt}) => (
+            {id, userId, userName, message, createdAt, updatedAt}
+        ))
+        res.send(newMessages);
     })
 });
 
 router.post("/message", (req,res)=>{
     const newMessage = {
         id: uuidv1(),
-        user_id: req.body.user_id,
+        userId: req.body.userId,
+        userName: req.body.userName,
         message: req.body.message,
-        created_at: new Date(),
-        updated_at: new Date()
+        createdAt: new Date(),
+        updatedAt: new Date()
     }
+    
     Message.create(newMessage).then(message => {
         res.send(message)
     });

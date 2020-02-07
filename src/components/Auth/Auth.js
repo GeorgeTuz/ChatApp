@@ -14,31 +14,31 @@ import Typography from '@material-ui/core/Typography';
 class Auth extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {value: ''};
+    this.state = {userName: '', redirect: null};
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleChange(event) {
-    this.setState({value: event.target.value});
+    this.setState({userName: event.target.value});
   }
 
-  handleSubmit(event) {
+  async handleSubmit(event) {
     event.preventDefault();
-    var myHeaders = new Headers();
+    let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-    fetch('http://localhost:4000/api/user', {
+    await fetch('http://localhost:4000/api/user', {
       method: 'post',
       headers: myHeaders,
       mode: 'cors',
       body: JSON.stringify({
-        "name": this.state.value,
+        "name": this.state.userName,
         "avatar": "IMAGE"
       })
     });
     
-    fetch('http://localhost:4000/api/users', {
+    await fetch('http://localhost:4000/api/users', {
       method: 'GET',
       headers: myHeaders,
       redirect: 'follow'
@@ -46,20 +46,19 @@ class Auth extends React.Component {
     .then(response => response.text())
     .then(result => {
         localStorage.setItem('userId', JSON.parse(result)[JSON.parse(result).length-1].id);
-        console.log(JSON.parse(result)[JSON.parse(result).length-1].id);
+        localStorage.setItem('userName', JSON.parse(result)[JSON.parse(result).length-1].name);
     });
 
     this.setState({ redirect: "/chat" });
   }
 
-  state = { redirect: null };
 
   render() {
     if (this.state.redirect) {
         return <Redirect to={this.state.redirect} />
     }  
     return (
-      <div className="Auth">
+      <div>
         <Grid container component="main" className="root">
           <CssBaseline />
           <Grid item xs={false} sm={4} md={7} className="image" />
@@ -71,7 +70,7 @@ class Auth extends React.Component {
               <Typography component="h1" variant="h5">
                 Sign in
               </Typography>
-              <form className="form" noValidate onSubmit={this.handleSubmit}>
+              <form className="form" onSubmit={this.handleSubmit}>
                 <TextField
                   variant="outlined"
                   margin="normal"
@@ -81,9 +80,10 @@ class Auth extends React.Component {
                   label="Your Name"
                   name="name"
                   autoFocus 
-                  value={this.state.value} 
+                  value={this.state.userName} 
                   onChange={this.handleChange}
                 />
+
                 <Button
                   type="submit"
                   fullWidth
@@ -97,13 +97,6 @@ class Auth extends React.Component {
             </div>
           </Grid>
         </Grid>
-        {/* <form onSubmit={this.handleSubmit}>
-          <label>
-            Please, input your name: 
-            <input type="text" value={this.state.value} onChange={this.handleChange} />
-          </label>
-          <input type="submit" value="Log in" />
-        </form> */}
       </div>
     );
   }
