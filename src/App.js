@@ -11,7 +11,7 @@ class App extends React.Component {
     return (
       <BrowserRouter>
           <Route exact path="/" component={() => <Redirect to={{ pathname: '/auth' }} />} />
-          <div className="App-content">
+          <div className="app-content">
             <Route path='/auth' component={Auth}/>
             <Route path='/chat' component={Chat}/>
           </div>

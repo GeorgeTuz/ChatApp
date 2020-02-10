@@ -5,7 +5,7 @@
     height: 85vh;
     margin: 0 auto;
     overflow: auto;
-    background-color: rgb(236, 247, 250);
+    background-color: rgb(252, 252, 252);
 }
 
 .input-chat {
@@ -17,7 +17,47 @@
 
 .form-chat {
     display: flex;
-    justify-content: center;
+    margin: 0 auto;
+    width: 640px;
+    height: 60px;
+    border: none;
+    background-color: #f5f5f5;
+    font-size: 17px;
+    color: rgb(66, 66, 66);
+    padding: 0 30px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.form-input {
+    width: 540px;
+    height: 60px;
+    border: none;
+    background-color: #f5f5f5;
+    font-size: 17px;
+    color: rgb(66, 66, 66);
+    padding: 0 30px;
+    font-family: 'Montserrat', sans-serif;
+}
+.form-input:active, .form-input:focus {
+    outline:none;
+}
+.form-input::placeholder {
+    color: rgb(156, 156, 156);
+}
+
+.chat-button {
+    width: 35px;
+    background: none;
+    background-image: url(./../../assets/photo.png);
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+
+.chat-button, .chat-button:focus, .chat-button:hover, .chat-button:active {
+    border: none;
+    outline: none;
 }
 
 .form-chat .MuiFormControl-marginNormal {
@@ -42,8 +82,4 @@
     color: white;
     background-color: rgb(113, 173, 196);
     border-radius: 13px 13px 13px 0px;
-}
-
-.chat-form {
-    text-align: center;
 }

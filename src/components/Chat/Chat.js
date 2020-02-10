@@ -15,11 +15,11 @@ class Chat extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
-    fetch('http://localhost:4000/api/messages', {
+    await fetch('http://localhost:4000/api/messages', {
       method: 'GET',
       headers: myHeaders,
       redirect: 'follow'
@@ -29,6 +29,8 @@ class Chat extends React.Component {
       messages = JSON.parse(messages)
       this.setState({messages})
     })
+    let arrMassege = document.querySelectorAll('.mess');
+    arrMassege[arrMassege.length-1].scrollIntoView({block: 'end', behavior: 'smooth'});
   }
 
   handleChange(event) {
@@ -61,6 +63,8 @@ class Chat extends React.Component {
       messages = JSON.parse(messages)
       this.setState({messages})
     })
+    let arrMassege = document.querySelectorAll('.mess');
+    arrMassege[arrMassege.length-1].scrollIntoView({block: 'end', behavior: 'smooth'});
     this.setState({ newMessage: '' })
   }
 
@@ -72,29 +76,24 @@ class Chat extends React.Component {
         <div className="chat">
           <Box className='messages'>
             {this.state.messages.map(message => {
-              return (message.userId === userId) ? <div className="user-message mess">{message.message}</div> :
+              const isUserOwnMessage = message.userId === userId;
+              return isUserOwnMessage ? <div className="user-message mess">{message.message}</div> :
                 <div className="just-message mess">{message.message}</div>
             })}
           </Box>
           
-          <form className="form-chat" onSubmit={this.handleSubmit}>
-            <TextField
-              className='input-chat'
-              margin="normal"
-              id="message"
-              name="text"
-              autoFocus 
-              value={this.state.userName} 
-              onChange={this.handleChange}
-            />
-          </form>
+          
 
 
-          <form onSubmit={this.handleSubmit} className="chat-form">
-            
-            <input type="text" value={this.state.newMessage} onChange={this.handleChange} />
-            <input type="submit" value="Submit" />
-          </form>
+          
+            <div className="form-chat">
+              <button className="chat-button"></button>
+              <form onSubmit={this.handleSubmit} className="chat-form">
+                <input className="form-input" type="text" value={this.state.newMessage} onChange={this.handleChange}  placeholder="Chat something..."/>
+              </form>
+            </div>
+          
+          
         </div>
       );
     }
