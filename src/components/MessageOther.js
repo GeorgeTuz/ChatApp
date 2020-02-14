@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import userAvatar from '../assets/avatar.jpg';
 
 const useStyles = () => ({
   messageOther: {
@@ -19,8 +20,7 @@ const useStyles = () => ({
     margin: '10px 0',
   },
   photoMessage: {
-    backgroundImage:
-      "url('https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTITpgViDwu4Symi9a6mKojdhTR-oRPbMsbbPfpLkn4ko3FI2Sr')",
+    backgroundImage: `url(${userAvatar})`,
     width: '50px',
     height: '50px',
     borderRadius: '50%',

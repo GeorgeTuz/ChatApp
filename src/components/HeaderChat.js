@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import userAvatar from '../assets/avatar.jpg';
 
 const useStyles = () => ({
   headerChat: {
@@ -22,8 +23,7 @@ const useStyles = () => ({
     width: '570px',
   },
   photoUserHeader: {
-    backgroundImage:
-      "url('https://1ofdmq2n8tc36m6i46scovo2e-wpengine.netdna-ssl.com/wp-content/uploads/2014/04/Steven_Hallam-slide.jpg')",
+    backgroundImage: `url(${userAvatar})`,
     width: '50px',
     height: '50px',
     borderRadius: '50%',

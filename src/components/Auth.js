@@ -12,14 +12,16 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import BackendServices from '../BackendServices/backendServices';
-import { addUserName, addRedirect } from '../store/actions/actions';
+import { addUserName, addRedirect, addOpenModal } from '../store/actions/actions';
+import imageAuth from '../assets/authImage.jpg';
+import ModalWindow from './ModalWindow';
 
 const useStyles = () => ({
   root: {
     height: '100vh',
   },
   image: {
-    backgroundImage: 'url(./../../assets/authImage.jpg)',
+    backgroundImage: `url(${imageAuth})`,
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
@@ -41,7 +43,7 @@ const useStyles = () => ({
   submit: {
     margin: '3px 0px 2px',
   },
-  MuiPaperRoot: {
+  'MuiPaper-root': {
     display: 'flex',
     alignItems: 'center',
     margin: 'auto 0',
@@ -57,6 +59,10 @@ class Auth extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  handleClose = () => {
+    this.props.addOpenModalDis(false);
+  };
+
   handleChange(event) {
     this.props.addUserNameDis(event.target.value);
   }
@@ -65,7 +71,14 @@ class Auth extends React.Component {
     event.preventDefault();
     await BackendServices.postDataUser(this.props.state.reducerAuth.userName);
     await BackendServices.setDataUsersInLocalStorage();
-    await this.props.addRedirectDis('/chat');
+    const validation = this.props.state.reducerAuth.userName.match(/[A-Za-z0-9]+/);
+    if (!validation) {
+      this.props.addOpenModalDis(true);
+    } else if (validation[0].length === this.props.state.reducerAuth.userName.length) {
+      await this.props.addRedirectDis('/chat');
+    } else {
+      this.props.addOpenModalDis(true);
+    }
   }
 
   render() {
@@ -88,6 +101,7 @@ class Auth extends React.Component {
               </Typography>
               <form className={classes.form} onSubmit={this.handleSubmit}>
                 <TextField
+                  ref={this.inputRef}
                   variant="outlined"
                   margin="normal"
                   required
@@ -99,7 +113,6 @@ class Auth extends React.Component {
                   value={state.reducerAuth.userName}
                   onChange={this.handleChange}
                 />
-
                 <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
                   Sign In
                 </Button>
@@ -107,6 +120,7 @@ class Auth extends React.Component {
             </div>
           </Grid>
         </Grid>
+        <ModalWindow open={state.reducerAuth.open} onClose={this.handleClose} />
       </div>
     );
   }
@@ -115,6 +129,7 @@ class Auth extends React.Component {
 const mapDispatchToProps = dispatch => ({
   addUserNameDis: userName => dispatch(addUserName(userName)),
   addRedirectDis: redirect => dispatch(addRedirect(redirect)),
+  addOpenModalDis: redirect => dispatch(addOpenModal(redirect)),
 });
 
 Auth.propTypes = {
@@ -122,6 +137,7 @@ Auth.propTypes = {
   classes: PropTypes.object,
   addUserNameDis: PropTypes.func,
   addRedirectDis: PropTypes.func,
+  addOpenModalDis: PropTypes.func,
 };
 
 Auth.defaultProps = {
@@ -129,6 +145,7 @@ Auth.defaultProps = {
   classes: {},
   addUserNameDis: () => {},
   addRedirectDis: () => {},
+  addOpenModalDis: () => {},
 };
 
 export default withStyles(useStyles)(connect(state => ({ state }), mapDispatchToProps)(Auth));

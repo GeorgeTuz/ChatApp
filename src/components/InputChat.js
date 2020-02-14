@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import camera from '../assets/camera.png';
 
 const useStyles = () => ({
   formChat: {
@@ -38,7 +39,7 @@ const useStyles = () => ({
   chatButton: {
     width: '25px',
     background: 0,
-    backgroundImage: "url('https://svgsilh.com/svg/2112207.svg')",
+    backgroundImage: `url(${camera})`,
     backgroundPosition: 'center',
     backgroundSize: 'contain',
     backgroundRepeat: 'no-repeat',
