@@ -1,21 +1,21 @@
 import { ADD_USER_NAME, ADD_REDIRECT, ADD_OPEN_MODAL } from '../actions/actions';
 
-export default function reducerAuth(state = { userName: '', redirect: null, open: false }, action) {
-  switch (action.type) {
+export default function auth(state = { userName: '', redirect: null, open: false }, { type, payload }) {
+  switch (type) {
     case ADD_USER_NAME:
       return {
         ...state,
-        userName: action.userName,
+        userName: payload,
       };
     case ADD_REDIRECT:
       return {
         ...state,
-        redirect: action.redirect,
+        redirect: payload,
       };
     case ADD_OPEN_MODAL:
       return {
         ...state,
-        open: action.open,
+        open: payload,
       };
     default:
       return state;

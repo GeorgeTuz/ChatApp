@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
-import reducerChat from './reducerChat';
-import reducerAuth from './reducerAuth';
+import chat from './chat.reducer';
+import auth from './auth.reducer';
 
 const combine = combineReducers({
-  reducerChat,
-  reducerAuth,
+  chat,
+  auth,
 });
 export default combine;

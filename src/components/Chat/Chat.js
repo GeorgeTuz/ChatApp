@@ -2,13 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Box from '@material-ui/core/Box';
 import { withStyles } from '@material-ui/core/styles';
-import { connect } from 'react-redux';
-import MessageUser from './MessageUser';
-import MessageOther from './MessageOther';
-import HeaderChat from './HeaderChat';
-import InputChat from './InputChat';
-import BackendServices from '../BackendServices/backendServices';
-import { addMessages, addNewMessage } from '../store/actions/actions';
+import MessageUser from '../MessageUser/MessageUser';
+import MessageOther from '../MessageOther/MessageOther';
+import HeaderChat from '../HeaderChat/HeaderChat';
+import InputChat from '../InputChat/InputChat';
 
 const useStyles = () => ({
   messages: {
@@ -32,9 +29,13 @@ class Chat extends React.Component {
     this.messageBlock = React.createRef();
   }
 
-  async componentDidMount() {
-    const messages = await BackendServices.getMessages();
-    this.props.addMessages(messages);
+  componentDidMount() {
+    const messagesBlock = this.messageBlock.current;
+    const heightMessageBox = messagesBlock.scrollHeight;
+    messagesBlock.scrollTo(0, heightMessageBox);
+  }
+
+  componentDidUpdate() {
     const messagesBlock = this.messageBlock.current;
     const heightMessageBox = messagesBlock.scrollHeight;
     messagesBlock.scrollTo(0, heightMessageBox);
@@ -44,31 +45,23 @@ class Chat extends React.Component {
     this.props.addNewMessage(event.target.value);
   }
 
-  async handleSubmit(event) {
+  handleSubmit(event) {
     event.preventDefault();
-    const userId = localStorage.getItem('userId');
-    const userName = localStorage.getItem('userName');
-    console.log(userName);
-    BackendServices.postMessage(this.props.state.reducerChat.newMessage, userId, userName);
-    const messages = await BackendServices.getMessages();
-    this.props.addMessages(messages);
-    const messagesBlock = this.messageBlock.current;
-    const heightMessageBox = messagesBlock.scrollHeight;
-    messagesBlock.scrollTo(0, heightMessageBox);
-    this.props.addNewMessage('');
+    this.props.sendMessages();
   }
 
   render() {
-    const { classes, state } = this.props;
+    const { classes, messages, newMessage } = this.props;
     const userId = localStorage.getItem('userId');
     const userName = localStorage.getItem('userName');
+    console.log('Chat component');
 
     return (
       <div className="chat">
         <HeaderChat userName={userName} />
         <Box className={classes.messages} ref={this.messageBlock}>
-          {state.reducerChat.messages
-            ? state.reducerChat.messages.map(message => {
+          {messages
+            ? messages.map(message => {
                 const isUserOwnMessage = message.userId === userId;
                 return isUserOwnMessage ? (
                   <MessageUser message={message.message} userName={message.userName} />
@@ -78,33 +71,24 @@ class Chat extends React.Component {
               })
             : undefined}
         </Box>
-        <InputChat
-          value={state.reducerChat.newMessage !== undefined ? state.reducerChat.newMessage : undefined}
-          onChange={this.handleChange}
-          onSubmit={this.handleSubmit}
-        />
+        <InputChat value={newMessage || ''} onChange={this.handleChange} onSubmit={this.handleSubmit} />
       </div>
     );
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  addMessages: messages => dispatch(addMessages(messages)),
-  addNewMessage: newMessage => dispatch(addNewMessage(newMessage)),
-});
-
 Chat.propTypes = {
-  state: PropTypes.object,
+  messages: PropTypes.array.isRequired,
+  newMessage: PropTypes.string.isRequired,
   classes: PropTypes.object,
   addNewMessage: PropTypes.func,
-  addMessages: PropTypes.func,
+  sendMessages: PropTypes.func,
 };
 
 Chat.defaultProps = {
-  state: {},
   classes: {},
   addNewMessage: () => {},
-  addMessages: () => {},
+  sendMessages: () => {},
 };
 
-export default withStyles(useStyles)(connect(state => ({ state }), mapDispatchToProps)(Chat));
+export default withStyles(useStyles)(Chat);

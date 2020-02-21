@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/runtime": "^7.8.4",
     "@material-ui/core": "^4.9.1",
     "@material-ui/icons": "^4.9.1",
     "@testing-library/jest-dom": "^4.2.4",
@@ -12,6 +13,7 @@
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-react-app": "^6.2.0",
+    "milsymbol": "^2.0.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-id-generator": "^3.0.0",
@@ -20,6 +22,9 @@
     "react-scripts": "3.3.1",
     "react-simple-chatbot": "^0.6.1",
     "redux": "^4.0.5",
+    "redux-devtools-extension": "^2.13.8",
+    "redux-saga": "^1.1.3",
+    "reselect": "^4.0.0",
     "styled-components": "^5.0.1"
   },
   "scripts": {
@@ -29,7 +34,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint .",
-    "lint:fix": "eslint --fix ."
+    "lint:fix": "eslint --fix .",
+    "jest": "jest"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -47,10 +53,20 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.8.3",
+    "@babel/preset-es2015": "^7.0.0-beta.53",
+    "@babel/preset-react": "^7.8.3",
+    "babel-jest": "^25.1.0",
+    "babel-polyfill": "^6.26.0",
     "eslint-plugin-html": "^6.0.0",
     "eslint-plugin-jest": "^23.7.0",
     "file-loader": "^5.0.2",
+    "jest": "^25.1.0",
+    "jest-puppeteer": "^4.4.0",
+    "prop-types": "^15.7.2",
+    "puppeteer": "^2.1.1",
     "redux-devtools": "^3.5.0",
+    "redux-saga-test-plan": "^4.0.0-rc.3",
     "url-loader": "^3.0.0"
   }
 }

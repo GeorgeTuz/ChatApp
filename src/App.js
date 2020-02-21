@@ -1,13 +1,10 @@
 import React from 'react';
 import './App.css';
 import { BrowserRouter, Route, Redirect } from 'react-router-dom';
-import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import Auth from './components/Auth';
 import Chat from './components/Chat';
-import combine from './store/reducers';
-
-const store = createStore(combine, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+import { store } from './store';
 
 class App extends React.Component {
   render() {

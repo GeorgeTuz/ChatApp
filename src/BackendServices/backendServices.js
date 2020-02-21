@@ -1,6 +1,3 @@
-const myHeaders = new Headers();
-myHeaders.append('Content-Type', 'application/json');
-
 export default class BackendServices {
   static host = 'http://localhost:4000/api';
 
@@ -21,7 +18,7 @@ export default class BackendServices {
   static setDataUsersInLocalStorage = () =>
     this.dataRequest(this.usersRoue, {
       method: 'GET',
-      headers: myHeaders,
+      headers: new Headers().append('Content-Type', 'application/json'),
       redirect: 'follow',
     }).then(result => {
       localStorage.setItem('userId', JSON.parse(result)[JSON.parse(result).length - 1].id);
@@ -31,14 +28,14 @@ export default class BackendServices {
   static getMessages = () =>
     this.dataRequest(this.messagesRoue, {
       method: 'GET',
-      headers: myHeaders,
+      headers: new Headers().append('Content-Type', 'application/json'),
       redirect: 'follow',
     }).then(messages => JSON.parse(messages));
 
   static postDataUser = userName =>
     this.dataRequest(this.userRoue, {
       method: 'post',
-      headers: myHeaders,
+      headers: new Headers().append('Content-Type', 'application/json'),
       mode: 'cors',
       body: JSON.stringify({
         name: userName,
@@ -49,7 +46,7 @@ export default class BackendServices {
   static postMessage = (newMessage, userId, userName) =>
     this.dataRequest(this.messageRoue, {
       method: 'post',
-      headers: myHeaders,
+      headers: new Headers().append('Content-Type', 'application/json'),
       mode: 'cors',
       body: JSON.stringify({
         message: newMessage,

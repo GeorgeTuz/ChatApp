@@ -10,11 +10,8 @@ import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
-import { connect } from 'react-redux';
-import BackendServices from '../BackendServices/backendServices';
-import { addUserName, addRedirect, addOpenModal } from '../store/actions/actions';
-import imageAuth from '../assets/authImage.jpg';
-import ModalWindow from './ModalWindow';
+import imageAuth from '../../assets/authImage.jpg';
+import ModalWindow from '../ModalWindow/ModalWindow';
 
 const useStyles = () => ({
   root: {
@@ -67,24 +64,15 @@ class Auth extends React.Component {
     this.props.addUserNameDis(event.target.value);
   }
 
-  async handleSubmit(event) {
+  handleSubmit(event) {
     event.preventDefault();
-    await BackendServices.postDataUser(this.props.state.reducerAuth.userName);
-    await BackendServices.setDataUsersInLocalStorage();
-    const validation = this.props.state.reducerAuth.userName.match(/[A-Za-z0-9]+/);
-    if (!validation) {
-      this.props.addOpenModalDis(true);
-    } else if (validation[0].length === this.props.state.reducerAuth.userName.length) {
-      await this.props.addRedirectDis('/chat');
-    } else {
-      this.props.addOpenModalDis(true);
-    }
+    this.props.signIn();
   }
 
   render() {
-    const { classes, state } = this.props;
-    if (state.reducerAuth.redirect) {
-      return <Redirect to={state.reducerAuth.redirect} />;
+    const { classes, redirect, userName, open } = this.props;
+    if (redirect) {
+      return <Redirect to={redirect} />;
     }
     return (
       <div>
@@ -110,7 +98,7 @@ class Auth extends React.Component {
                   label="Your Name"
                   name="name"
                   autoFocus
-                  value={state.reducerAuth.userName}
+                  value={userName}
                   onChange={this.handleChange}
                 />
                 <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
@@ -120,32 +108,32 @@ class Auth extends React.Component {
             </div>
           </Grid>
         </Grid>
-        <ModalWindow open={state.reducerAuth.open} onClose={this.handleClose} />
+        <ModalWindow open={open} onClose={this.handleClose} />
       </div>
     );
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  addUserNameDis: userName => dispatch(addUserName(userName)),
-  addRedirectDis: redirect => dispatch(addRedirect(redirect)),
-  addOpenModalDis: redirect => dispatch(addOpenModal(redirect)),
-});
-
 Auth.propTypes = {
-  state: PropTypes.object,
+  userName: PropTypes.string.isRequired,
+  redirect: PropTypes.string.isRequired,
+  open: PropTypes.bool.isRequired,
   classes: PropTypes.object,
   addUserNameDis: PropTypes.func,
   addRedirectDis: PropTypes.func,
   addOpenModalDis: PropTypes.func,
+  signIn: PropTypes.func,
 };
 
 Auth.defaultProps = {
-  state: {},
+  userName: '',
+  redirect: '',
+  open: false,
   classes: {},
   addUserNameDis: () => {},
   addRedirectDis: () => {},
   addOpenModalDis: () => {},
+  signIn: () => {},
 };
 
-export default withStyles(useStyles)(connect(state => ({ state }), mapDispatchToProps)(Auth));
+export default withStyles(useStyles)(Auth);
