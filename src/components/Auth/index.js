@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import { addOpenModal, addRedirect, addUserName, signIn } from '../../store/actions/actions';
 import Auth from './Auth';
+import './Auth.css';
 
 const mapStateToProps = state => ({
   userName: state.auth.userName,

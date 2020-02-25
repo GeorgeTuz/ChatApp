@@ -31,13 +31,13 @@ class MessageUser extends React.Component {
 }
 
 MessageUser.propTypes = {
-  message: PropTypes.array,
+  message: PropTypes.string,
   classes: PropTypes.object,
 };
 
 MessageUser.defaultProps = {
   classes: {},
-  message: [],
+  message: '',
 };
 
 export default withStyles(useStyles)(MessageUser);

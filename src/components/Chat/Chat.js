@@ -8,11 +8,16 @@ import HeaderChat from '../HeaderChat/HeaderChat';
 import InputChat from '../InputChat/InputChat';
 
 const useStyles = () => ({
+  chat: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100vh',
+  },
   messages: {
     display: 'flex',
     flexDirection: 'column',
     width: '700px',
-    height: '75vh',
+    flex: '1',
     margin: '0 auto',
     overflow: 'auto',
     backgroundColor: 'rgb(252, 252, 252)',
@@ -54,24 +59,27 @@ class Chat extends React.Component {
     const { classes, messages, newMessage } = this.props;
     const userId = localStorage.getItem('userId');
     const userName = localStorage.getItem('userName');
-    console.log('Chat component');
 
     return (
-      <div className="chat">
+      <div className={classes.chat}>
         <HeaderChat userName={userName} />
         <Box className={classes.messages} ref={this.messageBlock}>
           {messages
-            ? messages.map(message => {
+            ? messages.map((message, index) => {
                 const isUserOwnMessage = message.userId === userId;
                 return isUserOwnMessage ? (
-                  <MessageUser message={message.message} userName={message.userName} />
+                  <MessageUser key={index.toString()} message={message.message} userName={message.userName} />
                 ) : (
-                  <MessageOther message={message.message} userName={message.userName} />
+                  <MessageOther key={index.toString()} message={message.message} userName={message.userName} />
                 );
               })
             : undefined}
         </Box>
-        <InputChat value={newMessage || ''} onChange={this.handleChange} onSubmit={this.handleSubmit} />
+        <InputChat
+          value={newMessage !== undefined ? newMessage : undefined}
+          onChange={this.handleChange}
+          onSubmit={this.handleSubmit}
+        />
       </div>
     );
   }

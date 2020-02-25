@@ -14,9 +14,6 @@ import imageAuth from '../../assets/authImage.jpg';
 import ModalWindow from '../ModalWindow/ModalWindow';
 
 const useStyles = () => ({
-  root: {
-    height: '100vh',
-  },
   image: {
     backgroundImage: `url(${imageAuth})`,
     backgroundRepeat: 'no-repeat',
@@ -69,6 +66,10 @@ class Auth extends React.Component {
     this.props.signIn();
   }
 
+  fileSelectedHendler = event => {
+    console.log(event.target.files[0]);
+  };
+
   render() {
     const { classes, redirect, userName, open } = this.props;
     if (redirect) {
@@ -76,7 +77,7 @@ class Auth extends React.Component {
     }
     return (
       <div>
-        <Grid container component="main" className={classes.formInput} root>
+        <Grid container component="main" className={classes.formInput}>
           <CssBaseline />
           <Grid item xs={false} sm={4} md={7} className={classes.image} />
           <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
@@ -101,6 +102,7 @@ class Auth extends React.Component {
                   value={userName}
                   onChange={this.handleChange}
                 />
+                <input type="file" onChange={this.fileSelectedHendler} />
                 <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
                   Sign In
                 </Button>
@@ -116,7 +118,7 @@ class Auth extends React.Component {
 
 Auth.propTypes = {
   userName: PropTypes.string.isRequired,
-  redirect: PropTypes.string.isRequired,
+  redirect: PropTypes.string,
   open: PropTypes.bool.isRequired,
   classes: PropTypes.object,
   addUserNameDis: PropTypes.func,
