@@ -28,9 +28,6 @@ class Chat extends React.Component {
   constructor(props) {
     super(props);
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-
     this.messageBlock = React.createRef();
   }
 
@@ -46,14 +43,14 @@ class Chat extends React.Component {
     messagesBlock.scrollTo(0, heightMessageBox);
   }
 
-  handleChange(event) {
+  handleChange = event => {
     this.props.addNewMessage(event.target.value);
-  }
+  };
 
-  handleSubmit(event) {
+  handleSubmit = event => {
     event.preventDefault();
     this.props.sendMessages();
-  }
+  };
 
   render() {
     const { classes, messages, newMessage } = this.props;
@@ -64,22 +61,17 @@ class Chat extends React.Component {
       <div className={classes.chat}>
         <HeaderChat userName={userName} />
         <Box className={classes.messages} ref={this.messageBlock}>
-          {messages
-            ? messages.map((message, index) => {
-                const isUserOwnMessage = message.userId === userId;
-                return isUserOwnMessage ? (
-                  <MessageUser key={index.toString()} message={message.message} userName={message.userName} />
-                ) : (
-                  <MessageOther key={index.toString()} message={message.message} userName={message.userName} />
-                );
-              })
-            : undefined}
+          {messages &&
+            messages.map((message, index) => {
+              const isUserOwnMessage = message.userId === userId;
+              return isUserOwnMessage ? (
+                <MessageUser key={index.toString()} message={message.message} userName={message.userName} />
+              ) : (
+                <MessageOther key={index.toString()} message={message.message} userName={message.userName} />
+              );
+            })}
         </Box>
-        <InputChat
-          value={newMessage !== undefined ? newMessage : undefined}
-          onChange={this.handleChange}
-          onSubmit={this.handleSubmit}
-        />
+        <InputChat value={newMessage && newMessage} onChange={this.handleChange} onSubmit={this.handleSubmit}/>
       </div>
     );
   }

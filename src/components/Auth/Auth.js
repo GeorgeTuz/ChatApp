@@ -14,6 +14,19 @@ import imageAuth from '../../assets/authImage.jpg';
 import ModalWindow from '../ModalWindow/ModalWindow';
 
 const useStyles = () => ({
+  '@global': {
+    '.MuiGrid-container': {
+      height: '100vh',
+    },
+    '.MuiPaper-root': {
+      display: 'flex',
+      alignItems: 'center',
+    },
+    '.Auth-paper-3': {
+      padding: '8px 4px',
+      margin: 0,
+    },
+  },
   image: {
     backgroundImage: `url(${imageAuth})`,
     backgroundRepeat: 'no-repeat',
@@ -46,22 +59,15 @@ const useStyles = () => ({
 });
 
 class Auth extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
   handleClose = () => {
     this.props.addOpenModalDis(false);
   };
 
-  handleChange(event) {
+  handleChange = event => {
     this.props.addUserNameDis(event.target.value);
   }
 
-  handleSubmit(event) {
+  handleSubmit = event => {
     event.preventDefault();
     this.props.signIn();
   }
@@ -71,7 +77,7 @@ class Auth extends React.Component {
   };
 
   render() {
-    const { classes, redirect, userName, open } = this.props;
+    const { classes, redirect, userName, isModalOpen } = this.props;
     if (redirect) {
       return <Redirect to={redirect} />;
     }
@@ -110,7 +116,7 @@ class Auth extends React.Component {
             </div>
           </Grid>
         </Grid>
-        <ModalWindow open={open} onClose={this.handleClose} />
+        <ModalWindow open={isModalOpen} onClose={this.handleClose} />
       </div>
     );
   }
@@ -119,7 +125,7 @@ class Auth extends React.Component {
 Auth.propTypes = {
   userName: PropTypes.string.isRequired,
   redirect: PropTypes.string,
-  open: PropTypes.bool.isRequired,
+  isModalOpen: PropTypes.bool.isRequired,
   classes: PropTypes.object,
   addUserNameDis: PropTypes.func,
   addRedirectDis: PropTypes.func,
@@ -130,7 +136,7 @@ Auth.propTypes = {
 Auth.defaultProps = {
   userName: '',
   redirect: '',
-  open: false,
+  isModalOpen: false,
   classes: {},
   addUserNameDis: () => {},
   addRedirectDis: () => {},

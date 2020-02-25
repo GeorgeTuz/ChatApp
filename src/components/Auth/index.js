@@ -1,18 +1,17 @@
 import { connect } from 'react-redux';
 import { addOpenModal, addRedirect, addUserName, signIn } from '../../store/actions/actions';
 import Auth from './Auth';
-import './Auth.css';
 
 const mapStateToProps = state => ({
   userName: state.auth.userName,
   redirect: state.auth.redirect,
-  open: state.auth.open,
+  isModalOpen: state.auth.open,
 });
 
 const mapDispatchToProps = dispatch => ({
   addUserNameDis: userName => dispatch(addUserName(userName)),
   addRedirectDis: redirect => dispatch(addRedirect(redirect)),
-  addOpenModalDis: open => dispatch(addOpenModal(open)),
+  addOpenModalDis: isModalOpen => dispatch(addOpenModal(isModalOpen)),
   signIn: () => dispatch(signIn()),
 });
 

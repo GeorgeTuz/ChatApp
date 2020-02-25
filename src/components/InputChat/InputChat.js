@@ -61,8 +61,18 @@ const useStyles = () => ({
 });
 
 class InputChat extends React.Component {
+  constructor(props) {
+    super(props);
+    this.inputElement = React.createRef();
+  }
+
+
+
   render() {
+    const inputEl = this.inputElement.current;
     const { classes, onSubmit, onChange, value } = this.props;
+    // eslint-disable-next-line no-unused-expressions
+    value ? inputEl && inputEl.setCustomValidity('') : inputEl && inputEl.setCustomValidity(' ');
     return (
       <div className={classes.formChat}>
         <div className={classes.chatButton}></div>
@@ -73,6 +83,7 @@ class InputChat extends React.Component {
             value={value}
             onChange={onChange}
             placeholder="Chat something..."
+            ref={this.inputElement}
           />
         </form>
       </div>
