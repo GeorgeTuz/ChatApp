@@ -69,10 +69,13 @@ class InputChat extends React.Component {
 
 
   render() {
-    const inputEl = this.inputElement.current;
     const { classes, onSubmit, onChange, value } = this.props;
-    // eslint-disable-next-line no-unused-expressions
-    value ? inputEl && inputEl.setCustomValidity('') : inputEl && inputEl.setCustomValidity(' ');
+    const inputEl = this.inputElement.current;
+    if (value) {
+      inputEl && inputEl.setCustomValidity('');
+    } else {
+      inputEl && inputEl.setCustomValidity(' ');
+    }
     return (
       <div className={classes.formChat}>
         <div className={classes.chatButton}></div>

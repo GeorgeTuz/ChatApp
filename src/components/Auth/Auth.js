@@ -50,15 +50,18 @@ const useStyles = () => ({
   submit: {
     margin: '3px 0px 2px',
   },
-  'MuiPaper-root': {
-    display: 'flex',
-    alignItems: 'center',
-    margin: 'auto 0',
-    padding: '20px',
+  avatarPreview: {
+    width: '50px',
+    height: '50px',
+
   },
 });
 
 class Auth extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {file: '',imagePreviewUrl: ''};
+  }
   handleClose = () => {
     this.props.addOpenModalDis(false);
   };
@@ -72,9 +75,27 @@ class Auth extends React.Component {
     this.props.signIn();
   }
 
-  fileSelectedHendler = event => {
-    console.log(event.target.files[0]);
-  };
+  _handleSubmit(e) {
+    e.preventDefault();
+    console.log('handle uploading-', this.state.file);
+  }
+
+  _handleImageChange(e) {
+    e.preventDefault();
+
+    let reader = new FileReader();
+    let file = e.target.files[0];
+    reader.onloadend = () => {
+      this.setState({
+        file: file,
+        imagePreviewUrl: reader.result
+      });
+      console.log(reader.result);
+    }
+
+    reader.readAsDataURL(file)
+  }
+
 
   render() {
     const { classes, redirect, userName, isModalOpen } = this.props;
@@ -108,7 +129,11 @@ class Auth extends React.Component {
                   value={userName}
                   onChange={this.handleChange}
                 />
-                <input type="file" onChange={this.fileSelectedHendler} />
+                <input type="file" onChange={(e)=>this._handleImageChange(e)} />
+                <button type="submit" onClick={(e)=>this._handleSubmit(e)}>
+                  Upload Image
+                </button>
+                <img className={classes.avatarPreview} src={this.state.imagePreviewUrl} alt="avatar"/>
                 <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
                   Sign In
                 </Button>
