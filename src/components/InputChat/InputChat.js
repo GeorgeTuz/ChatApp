@@ -18,9 +18,9 @@ const useStyles = () => ({
   },
   formInput: {
     wordWrap: 'break-word',
-    width: '540px',
-    height: '60px',
-    border: 'none',
+    width: '536px',
+    height: '56px',
+    border: '2px solid #f5f5f5',
     backgroundColor: '#f5f5f5',
     fontSize: '17px',
     color: 'rgb(66, 66, 66)',
@@ -63,12 +63,11 @@ const useStyles = () => ({
 class InputChat extends React.Component {
   constructor(props) {
     super(props);
-    this.inputElement = React.createRef();
   }
 
   render() {
-    const { classes, onSubmit, onChange, value } = this.props;
-
+    const { classes, onSubmit, onChange, value, inputBg } = this.props;
+    const style = { borderColor: inputBg };
     return (
       <div className={classes.formChat}>
         <div className={classes.chatButton} />
@@ -79,7 +78,7 @@ class InputChat extends React.Component {
             value={value}
             onChange={onChange}
             placeholder="Chat something..."
-            ref={this.inputElement}
+            style={ style }
           />
         </form>
       </div>
@@ -92,6 +91,7 @@ InputChat.propTypes = {
   value: PropTypes.string,
   onSubmit: PropTypes.func,
   onChange: PropTypes.func,
+  inputBg: PropTypes.string,
 };
 
 InputChat.defaultProps = {
@@ -99,6 +99,7 @@ InputChat.defaultProps = {
   onChange: () => {},
   classes: {},
   value: '',
+  inputBg: '',
 };
 
 export default withStyles(useStyles)(InputChat);

@@ -1,32 +1,36 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Box from '@material-ui/core/Box';
-import { withStyles } from '@material-ui/core/styles';
-import MessageUser from '../MessageUser/MessageUser';
-import MessageOther from '../MessageOther/MessageOther';
-import HeaderChat from '../HeaderChat/HeaderChat';
-import InputChat from '../InputChat/InputChat';
+import React from "react";
+import PropTypes from "prop-types";
+import Box from "@material-ui/core/Box";
+import { withStyles } from "@material-ui/core/styles";
+import MessageUser from "../MessageUser/MessageUser";
+import MessageOther from "../MessageOther/MessageOther";
+import HeaderChat from "../HeaderChat/HeaderChat";
+import InputChat from "../InputChat/InputChat";
 
 const useStyles = () => ({
   chat: {
-    display: 'flex',
-    flexDirection: 'column',
-    height: '100vh',
+    display: "flex",
+    flexDirection: "column",
+    height: "100vh"
   },
   messages: {
-    display: 'flex',
-    flexDirection: 'column',
-    width: '700px',
-    flex: '1',
-    margin: '0 auto',
-    overflow: 'auto',
-    backgroundColor: 'rgb(252, 252, 252)',
-  },
+    display: "flex",
+    flexDirection: "column",
+    width: "700px",
+    flex: "1",
+    margin: "0 auto",
+    overflow: "auto",
+    backgroundColor: "rgb(252, 252, 252)"
+  }
 });
 
 class Chat extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      newMessage: "",
+      inputBg: "#f5f5f5"
+    };
 
     this.messageBlock = React.createRef();
   }
@@ -44,18 +48,26 @@ class Chat extends React.Component {
   }
 
   handleChange = event => {
-    this.props.addNewMessage(event.target.value);
+    this.setState({ newMessage: event.target.value });
+    this.setState({ inputBg: "#f5f5f5" });
   };
 
   handleSubmit = event => {
+    let { newMessage } = this.state;
     event.preventDefault();
-    this.props.sendMessages();
+    newMessage = newMessage.replace(/^\s*/,'').replace(/\s*$/,'');
+    if (newMessage) {
+      this.props.sendMessages(newMessage);
+      this.setState({ newMessage: "" });
+    } else {
+      this.setState({ inputBg: "red" });
+    }
   };
 
   render() {
-    const { classes, messages, newMessage } = this.props;
-    const userId = localStorage.getItem('userId');
-    const userName = localStorage.getItem('userName');
+    const { classes, messages } = this.props;
+    const userId = localStorage.getItem("userId");
+    const userName = localStorage.getItem("userName");
 
     return (
       <div className={classes.chat}>
@@ -65,13 +77,26 @@ class Chat extends React.Component {
             messages.map((message, index) => {
               const isUserOwnMessage = message.userId === userId;
               return isUserOwnMessage ? (
-                <MessageUser key={index.toString()} message={message.message} userName={message.userName} />
+                <MessageUser
+                  key={index.toString()}
+                  message={message.message}
+                  userName={message.userName}
+                />
               ) : (
-                <MessageOther key={index.toString()} message={message.message} userName={message.userName} />
+                <MessageOther
+                  key={index.toString()}
+                  message={message.message}
+                  userName={message.userName}
+                />
               );
             })}
         </Box>
-        <InputChat value={newMessage && newMessage} onChange={this.handleChange} onSubmit={this.handleSubmit} />
+        <InputChat
+          value={this.state.newMessage}
+          inputBg={this.state.inputBg}
+          onChange={this.handleChange}
+          onSubmit={this.handleSubmit}
+        />
       </div>
     );
   }
@@ -79,16 +104,13 @@ class Chat extends React.Component {
 
 Chat.propTypes = {
   messages: PropTypes.array.isRequired,
-  newMessage: PropTypes.string.isRequired,
   classes: PropTypes.object,
-  addNewMessage: PropTypes.func,
-  sendMessages: PropTypes.func,
+  sendMessages: PropTypes.func
 };
 
 Chat.defaultProps = {
   classes: {},
-  addNewMessage: () => {},
-  sendMessages: () => {},
+  sendMessages: () => {}
 };
 
 export default withStyles(useStyles)(Chat);

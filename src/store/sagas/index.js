@@ -1,8 +1,7 @@
-import { call, put, all, select, takeEvery } from 'redux-saga/effects';
-import BackendServices from '../../BackendServices/backendServices';
-import { addMessages, addOpenModal, addRedirect } from '../actions/actions';
+import { call, put, all, select, takeEvery } from "redux-saga/effects";
+import BackendServices from "../../BackendServices/backendServices";
+import { addMessages, addOpenModal, addRedirect } from "../actions/actions";
 
-const getNewMessageSelect = state => state.chat.newMessage;
 const getUserNameSelect = state => state.auth.userName;
 
 export function* init() {
@@ -10,21 +9,17 @@ export function* init() {
   yield put(addMessages(getMess));
 }
 
-function* sendMessagesWorker() {
-  const userId = localStorage.getItem('userId');
-  const userName = localStorage.getItem('userName');
-  let newMessage = yield select(getNewMessageSelect);
-  newMessage = newMessage.replace(/^\s*/,'').replace(/\s*$/,'');
-  if (newMessage) {
-    yield call(BackendServices.postMessage, newMessage, userId, userName);
-    yield put({ type: 'SEND_MESSAGE_SUCCESS' });
-  }
+function* sendMessagesWorker(action) {
+  const userId = localStorage.getItem("userId");
+  const userName = localStorage.getItem("userName");
+
+  yield call(BackendServices.postMessage, action.payload, userId, userName);
   const getMess = yield call(BackendServices.getMessages);
   yield put(addMessages(getMess));
 }
 
 export function* sendMessagesWatcher() {
-  yield takeEvery('SEND_MESSAGE', sendMessagesWorker);
+  yield takeEvery("SEND_MESSAGE", sendMessagesWorker);
 }
 
 function* signInWorker() {
@@ -35,14 +30,14 @@ function* signInWorker() {
   } else if (validation[0].length === userName.length) {
     yield call(BackendServices.postDataUser, userName);
     yield call(BackendServices.setDataUsersInLocalStorage);
-    yield put(addRedirect('/chat'));
+    yield put(addRedirect("/chat"));
   } else {
     yield put(addOpenModal(true));
   }
 }
 
 export function* signInWatcher() {
-  yield takeEvery('SIGN_IN', signInWorker);
+  yield takeEvery("SIGN_IN", signInWorker);
 }
 
 export default function* rootSaga() {

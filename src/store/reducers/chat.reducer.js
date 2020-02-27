@@ -12,11 +12,6 @@ export default function chat(state = { messages: [], newMessage: '' }, { type, p
         ...state,
         newMessage: payload,
       };
-    case 'SEND_MESSAGE_SUCCESS':
-      return {
-        ...state,
-        newMessage: '',
-      };
     default:
       return state;
   }

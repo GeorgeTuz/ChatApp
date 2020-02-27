@@ -21,8 +21,8 @@ export function addRedirect(redirect) {
 export function addOpenModal(open) {
   return { type: ADD_OPEN_MODAL, payload: open };
 }
-export function sendMessages() {
-  return { type: SEND_MESSAGE, payload: null };
+export function sendMessages(messages) {
+  return { type: SEND_MESSAGE, payload: messages };
 }
 export function signIn() {
   return { type: SIGN_IN, payload: null };
