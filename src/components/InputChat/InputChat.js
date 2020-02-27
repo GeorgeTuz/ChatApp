@@ -16,11 +16,16 @@ const useStyles = () => ({
     padding: '0 30px',
     fontFamily: "'Montserrat', sans-serif",
   },
+  inputValid: {
+    border: '2px solid #f5f5f5',
+  },
+  inputNotValid: {
+    border: '2px solid red',
+  },
   formInput: {
     wordWrap: 'break-word',
     width: '536px',
     height: '56px',
-    border: '2px solid #f5f5f5',
     backgroundColor: '#f5f5f5',
     fontSize: '17px',
     color: 'rgb(66, 66, 66)',
@@ -61,24 +66,19 @@ const useStyles = () => ({
 });
 
 class InputChat extends React.Component {
-  constructor(props) {
-    super(props);
-  }
 
   render() {
-    const { classes, onSubmit, onChange, value, inputBg } = this.props;
-    const style = { borderColor: inputBg };
+    const { classes, onSubmit, onChange, value, isValid } = this.props;
     return (
       <div className={classes.formChat}>
         <div className={classes.chatButton} />
         <form onSubmit={onSubmit}>
           <input
-            className={classes.formInput}
+            className={`${classes.formInput} ${isValid ? classes.inputValid : classes.inputNotValid}`}
             type="text"
             value={value}
             onChange={onChange}
             placeholder="Chat something..."
-            style={ style }
           />
         </form>
       </div>

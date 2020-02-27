@@ -29,7 +29,7 @@ class Chat extends React.Component {
     super(props);
     this.state = {
       newMessage: "",
-      inputBg: "#f5f5f5"
+      isValid: true
     };
 
     this.messageBlock = React.createRef();
@@ -48,8 +48,7 @@ class Chat extends React.Component {
   }
 
   handleChange = event => {
-    this.setState({ newMessage: event.target.value });
-    this.setState({ inputBg: "#f5f5f5" });
+    this.setState({ newMessage: event.target.value, isValid: true });
   };
 
   handleSubmit = event => {
@@ -60,7 +59,7 @@ class Chat extends React.Component {
       this.props.sendMessages(newMessage);
       this.setState({ newMessage: "" });
     } else {
-      this.setState({ inputBg: "red" });
+      this.setState({ isValid: false });
     }
   };
 
@@ -93,7 +92,7 @@ class Chat extends React.Component {
         </Box>
         <InputChat
           value={this.state.newMessage}
-          inputBg={this.state.inputBg}
+          isValid={this.state.isValid}
           onChange={this.handleChange}
           onSubmit={this.handleSubmit}
         />
