@@ -13,10 +13,12 @@ export function* init() {
 function* sendMessagesWorker() {
   const userId = localStorage.getItem('userId');
   const userName = localStorage.getItem('userName');
-  const newMessage = yield select(getNewMessageSelect);
-  yield call(BackendServices.postMessage, newMessage, userId, userName);
-
-  yield put({ type: 'SEND_MESSAGE_SUCCESS' });
+  let newMessage = yield select(getNewMessageSelect);
+  newMessage = newMessage.replace(/^\s*/,'').replace(/\s*$/,'');
+  if (newMessage) {
+    yield call(BackendServices.postMessage, newMessage, userId, userName);
+    yield put({ type: 'SEND_MESSAGE_SUCCESS' });
+  }
   const getMess = yield call(BackendServices.getMessages);
   yield put(addMessages(getMess));
 }

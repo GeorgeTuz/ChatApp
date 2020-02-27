@@ -68,14 +68,6 @@ class InputChat extends React.Component {
 
   render() {
     const { classes, onSubmit, onChange, value } = this.props;
-    const inputEl = this.inputElement.current;
-    if (inputEl) {
-      if (!value) {
-        inputEl.setCustomValidity(' ');
-      } else {
-        inputEl.setCustomValidity('');
-      }
-    }
 
     return (
       <div className={classes.formChat}>
