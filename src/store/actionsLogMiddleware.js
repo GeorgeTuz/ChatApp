@@ -1,4 +1,4 @@
-const ActionsLogMiddleware = store => next => action => {
+const ActionsLogMiddleware = () => next => action => {
   console.log(`Action Log:`, action);
   next(action);
 };

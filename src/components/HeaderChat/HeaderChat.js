@@ -41,7 +41,7 @@ class HeaderChat extends React.PureComponent {
     return (
       <div className={classes.headerChat}>
         <div className={classes.userNameHeader}>{userName}</div>
-        <div className={classes.photoUserHeader}></div>
+        <div className={classes.photoUserHeader} />
       </div>
     );
   }

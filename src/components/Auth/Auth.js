@@ -53,27 +53,27 @@ const useStyles = () => ({
   avatarPreview: {
     width: '50px',
     height: '50px',
-
   },
 });
 
 class Auth extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {file: '',imagePreviewUrl: ''};
+    this.state = { file: '', imagePreviewUrl: '' };
   }
+
   handleClose = () => {
     this.props.addOpenModalDis(false);
   };
 
   handleChange = event => {
     this.props.addUserNameDis(event.target.value);
-  }
+  };
 
   handleSubmit = event => {
     event.preventDefault();
     this.props.signIn();
-  }
+  };
 
   _handleSubmit(e) {
     e.preventDefault();
@@ -83,19 +83,18 @@ class Auth extends React.Component {
   _handleImageChange(e) {
     e.preventDefault();
 
-    let reader = new FileReader();
-    let file = e.target.files[0];
+    const reader = new FileReader();
+    const file = e.target.files[0];
     reader.onloadend = () => {
       this.setState({
-        file: file,
-        imagePreviewUrl: reader.result
+        file,
+        imagePreviewUrl: reader.result,
       });
       console.log(reader.result);
-    }
+    };
 
-    reader.readAsDataURL(file)
+    reader.readAsDataURL(file);
   }
-
 
   render() {
     const { classes, redirect, userName, isModalOpen } = this.props;
@@ -129,11 +128,11 @@ class Auth extends React.Component {
                   value={userName}
                   onChange={this.handleChange}
                 />
-                <input type="file" onChange={(e)=>this._handleImageChange(e)} />
-                <button type="submit" onClick={(e)=>this._handleSubmit(e)}>
+                <input type="file" onChange={e => this._handleImageChange(e)} />
+                <button type="submit" onClick={e => this._handleSubmit(e)}>
                   Upload Image
                 </button>
-                <img className={classes.avatarPreview} src={this.state.imagePreviewUrl} alt="avatar"/>
+                <img className={classes.avatarPreview} src={this.state.imagePreviewUrl} alt="avatar" />
                 <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
                   Sign In
                 </Button>
@@ -148,12 +147,11 @@ class Auth extends React.Component {
 }
 
 Auth.propTypes = {
-  userName: PropTypes.string.isRequired,
+  userName: PropTypes.string,
   redirect: PropTypes.string,
-  isModalOpen: PropTypes.bool.isRequired,
+  isModalOpen: PropTypes.bool,
   classes: PropTypes.object,
   addUserNameDis: PropTypes.func,
-  addRedirectDis: PropTypes.func,
   addOpenModalDis: PropTypes.func,
   signIn: PropTypes.func,
 };
@@ -164,7 +162,6 @@ Auth.defaultProps = {
   isModalOpen: false,
   classes: {},
   addUserNameDis: () => {},
-  addRedirectDis: () => {},
   addOpenModalDis: () => {},
   signIn: () => {},
 };

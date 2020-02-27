@@ -71,7 +71,7 @@ class Chat extends React.Component {
               );
             })}
         </Box>
-        <InputChat value={newMessage && newMessage} onChange={this.handleChange} onSubmit={this.handleSubmit}/>
+        <InputChat value={newMessage && newMessage} onChange={this.handleChange} onSubmit={this.handleSubmit} />
       </div>
     );
   }

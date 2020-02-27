@@ -44,7 +44,7 @@ class MessageOther extends React.PureComponent {
     const { userName } = this.props;
     return (
       <div className={classes.messageContainerOther}>
-        <div className={classes.photoMessage}></div>
+        <div className={classes.photoMessage} />
         <div className={classes.messageOther}>
           <div className={classes.userName}>{userName}</div>
           <div>{message}</div>
