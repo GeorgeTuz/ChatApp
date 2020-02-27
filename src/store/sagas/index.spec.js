@@ -7,7 +7,7 @@ jest.mock('../../BackendServices/backendServices', () => ({ getMessages: () => {
 
 const getMess = [1, 2, 3];
 
-it('1', () =>
+it('Test init saga use expectSaga for mock call', () =>
   expectSaga(init)
     .provide({
       call({ fn }, next) {
@@ -23,7 +23,7 @@ it('1', () =>
     })
     .run());
 
-it('2', () => {
+it('Test init saga use testSaga and mock with jest', () => {
   testSaga(init)
     .next()
     .call(BackendServices.getMessages)
