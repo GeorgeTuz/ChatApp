@@ -66,7 +66,6 @@ const useStyles = () => ({
 });
 
 class InputChat extends React.Component {
-
   render() {
     const { classes, onSubmit, onChange, value, isValid } = this.props;
     return (
@@ -91,7 +90,7 @@ InputChat.propTypes = {
   value: PropTypes.string,
   onSubmit: PropTypes.func,
   onChange: PropTypes.func,
-  inputBg: PropTypes.string,
+  isValid: PropTypes.bool,
 };
 
 InputChat.defaultProps = {
@@ -99,7 +98,7 @@ InputChat.defaultProps = {
   onChange: () => {},
   classes: {},
   value: '',
-  inputBg: '',
+  isValid: true,
 };
 
 export default withStyles(useStyles)(InputChat);

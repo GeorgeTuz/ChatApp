@@ -1,5 +1,5 @@
-import {all, call, put, select, takeEvery} from "redux-saga/effects";
-import {addMessagesAction, addOpenModalAction, addRedirectAction} from "../actions/actions";
+import { all, call, put, select, takeEvery } from 'redux-saga/effects';
+import { addMessagesAction, addOpenModalAction, addRedirectAction } from '../actions/actions';
 
 const myHeaders = new Headers();
 myHeaders.append('Content-Type', 'application/json');
@@ -13,58 +13,58 @@ const messageRoue = '/message';
 const getUserNameSelect = state => state.auth.userName;
 
 function* setDataUsersInLocalStorage() {
-    let response = yield call(() => {
-        return fetch(`${host}${usersRoue}`, {
-        method: 'GET',
-        headers: myHeaders,
-        redirect: 'follow',
-        });
-    });
-    let result = yield response.text();
-    let usersList = JSON.parse(result);
-    localStorage.setItem('userId', usersList[usersList.length - 1].id);
-    localStorage.setItem('userName', usersList[usersList.length - 1].name);
+  const response = yield call(() =>
+    fetch(`${host}${usersRoue}`, {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow',
+    })
+  );
+  const result = yield response.text();
+  const usersList = JSON.parse(result);
+  localStorage.setItem('userId', usersList[usersList.length - 1].id);
+  localStorage.setItem('userName', usersList[usersList.length - 1].name);
 }
 
 function* getMessages() {
-    let response = yield call(() => {
-        return fetch(`${host}${messagesRoue}`, {
-            method: 'GET',
-            headers: myHeaders,
-            redirect: 'follow',
-        });
-    });
-    let messages = yield response.text();
-    return JSON.parse(messages);
+  const response = yield call(() =>
+    fetch(`${host}${messagesRoue}`, {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow',
+    })
+  );
+  const messages = yield response.text();
+  return JSON.parse(messages);
 }
 
 function* postDataUser(userName) {
-    yield call(() => {
-        return fetch(`${host}${userRoue}`, {
-            method: 'post',
-            headers: myHeaders,
-            mode: 'cors',
-            body: JSON.stringify({
-                name: userName,
-                avatar: 'IMAGE',
-            }),
-        });
-    });
+  yield call(() =>
+    fetch(`${host}${userRoue}`, {
+      method: 'post',
+      headers: myHeaders,
+      mode: 'cors',
+      body: JSON.stringify({
+        name: userName,
+        avatar: 'IMAGE',
+      }),
+    })
+  );
 }
 
 function* postMessage(newMessage, userId, userName) {
-    yield call(() => {
-        return fetch(`${host}${messageRoue}`, {
-            method: 'post',
-            headers: myHeaders,
-            mode: 'cors',
-            body: JSON.stringify({
-                message: newMessage,
-                userId,
-                userName,
-            }),
-        });
-    });
+  yield call(() =>
+    fetch(`${host}${messageRoue}`, {
+      method: 'post',
+      headers: myHeaders,
+      mode: 'cors',
+      body: JSON.stringify({
+        message: newMessage,
+        userId,
+        userName,
+      }),
+    })
+  );
 }
 
 export function* init() {
@@ -73,8 +73,8 @@ export function* init() {
 }
 
 function* sendMessagesWorker(action) {
-  const userId = localStorage.getItem("userId");
-  const userName = localStorage.getItem("userName");
+  const userId = localStorage.getItem('userId');
+  const userName = localStorage.getItem('userName');
 
   yield call(postMessage, action.payload, userId, userName);
   const getMess = yield call(getMessages);
@@ -82,7 +82,7 @@ function* sendMessagesWorker(action) {
 }
 
 export function* sendMessagesWatcher() {
-  yield takeEvery("SEND_MESSAGE", sendMessagesWorker);
+  yield takeEvery('SEND_MESSAGE', sendMessagesWorker);
 }
 
 function* signInWorker() {
@@ -93,14 +93,14 @@ function* signInWorker() {
   } else if (validation[0].length === userName.length) {
     yield call(postDataUser, userName);
     yield call(setDataUsersInLocalStorage);
-    yield put(addRedirectAction("/chat"));
+    yield put(addRedirectAction('/chat'));
   } else {
     yield put(addOpenModalAction(true));
   }
 }
 
 export function* signInWatcher() {
-  yield takeEvery("SIGN_IN", signInWorker);
+  yield takeEvery('SIGN_IN', signInWorker);
 }
 
 export default function* rootSaga() {

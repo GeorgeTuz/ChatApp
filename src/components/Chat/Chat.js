@@ -1,35 +1,35 @@
-import React from "react";
-import PropTypes from "prop-types";
-import Box from "@material-ui/core/Box";
-import { withStyles } from "@material-ui/core/styles";
-import MessageUser from "../MessageUser/MessageUser";
-import MessageOther from "../MessageOther/MessageOther";
-import HeaderChat from "../HeaderChat/HeaderChat";
-import InputChat from "../InputChat/InputChat";
+import React from 'react';
+import PropTypes from 'prop-types';
+import Box from '@material-ui/core/Box';
+import { withStyles } from '@material-ui/core/styles';
+import MessageUser from '../MessageUser/MessageUser';
+import MessageOther from '../MessageOther/MessageOther';
+import HeaderChat from '../HeaderChat/HeaderChat';
+import InputChat from '../InputChat/InputChat';
 
 const useStyles = () => ({
   chat: {
-    display: "flex",
-    flexDirection: "column",
-    height: "100vh"
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100vh',
   },
   messages: {
-    display: "flex",
-    flexDirection: "column",
-    width: "700px",
-    flex: "1",
-    margin: "0 auto",
-    overflow: "auto",
-    backgroundColor: "rgb(252, 252, 252)"
-  }
+    display: 'flex',
+    flexDirection: 'column',
+    width: '700px',
+    flex: '1',
+    margin: '0 auto',
+    overflow: 'auto',
+    backgroundColor: 'rgb(252, 252, 252)',
+  },
 });
 
 class Chat extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      newMessage: "",
-      isValid: true
+      newMessage: '',
+      isValid: true,
     };
 
     this.messageBlock = React.createRef();
@@ -54,10 +54,10 @@ class Chat extends React.Component {
   handleSubmit = event => {
     let { newMessage } = this.state;
     event.preventDefault();
-    newMessage = newMessage.replace(/^\s*/,'').replace(/\s*$/,'');
+    newMessage = newMessage.replace(/^\s*/, '').replace(/\s*$/, '');
     if (newMessage) {
       this.props.sendMessages(newMessage);
-      this.setState({ newMessage: "" });
+      this.setState({ newMessage: '' });
     } else {
       this.setState({ isValid: false });
     }
@@ -65,8 +65,8 @@ class Chat extends React.Component {
 
   render() {
     const { classes, messages } = this.props;
-    const userId = localStorage.getItem("userId");
-    const userName = localStorage.getItem("userName");
+    const userId = localStorage.getItem('userId');
+    const userName = localStorage.getItem('userName');
 
     return (
       <div className={classes.chat}>
@@ -76,17 +76,9 @@ class Chat extends React.Component {
             messages.map((message, index) => {
               const isUserOwnMessage = message.userId === userId;
               return isUserOwnMessage ? (
-                <MessageUser
-                  key={index.toString()}
-                  message={message.message}
-                  userName={message.userName}
-                />
+                <MessageUser key={index.toString()} message={message.message} userName={message.userName} />
               ) : (
-                <MessageOther
-                  key={index.toString()}
-                  message={message.message}
-                  userName={message.userName}
-                />
+                <MessageOther key={index.toString()} message={message.message} userName={message.userName} />
               );
             })}
         </Box>
@@ -104,12 +96,12 @@ class Chat extends React.Component {
 Chat.propTypes = {
   messages: PropTypes.array.isRequired,
   classes: PropTypes.object,
-  sendMessages: PropTypes.func
+  sendMessages: PropTypes.func,
 };
 
 Chat.defaultProps = {
   classes: {},
-  sendMessages: () => {}
+  sendMessages: () => {},
 };
 
 export default withStyles(useStyles)(Chat);
