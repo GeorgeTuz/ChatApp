@@ -1,5 +1,5 @@
-import { call, put, all, select, takeEvery } from "redux-saga/effects";
-import { addMessagesAction, addOpenModalAction, addRedirectAction } from "../actions/actions";
+import {all, call, put, select, takeEvery} from "redux-saga/effects";
+import {addMessagesAction, addOpenModalAction, addRedirectAction} from "../actions/actions";
 
 const myHeaders = new Headers();
 myHeaders.append('Content-Type', 'application/json');
@@ -12,51 +12,60 @@ const messageRoue = '/message';
 
 const getUserNameSelect = state => state.auth.userName;
 
-function dataRequest(url, data) {
-  return fetch(`${host}${url}`, {
-    ...data,
-  }).then(response => response.text());
+function* setDataUsersInLocalStorage() {
+    let response = yield call(() => {
+        return fetch(`${host}${usersRoue}`, {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow',
+        });
+    });
+    let result = yield response.text();
+    let usersList = JSON.parse(result);
+    localStorage.setItem('userId', usersList[usersList.length - 1].id);
+    localStorage.setItem('userName', usersList[usersList.length - 1].name);
 }
 
-const setDataUsersInLocalStorage = () =>
-    dataRequest(usersRoue, {
-      method: 'GET',
-      headers: myHeaders,
-      redirect: 'follow',
-    }).then(result => {
-      localStorage.setItem('userId', JSON.parse(result)[JSON.parse(result).length - 1].id);
-      localStorage.setItem('userName', JSON.parse(result)[JSON.parse(result).length - 1].name);
+function* getMessages() {
+    let response = yield call(() => {
+        return fetch(`${host}${messagesRoue}`, {
+            method: 'GET',
+            headers: myHeaders,
+            redirect: 'follow',
+        });
     });
+    let messages = yield response.text();
+    return yield JSON.parse(messages);
+}
 
-const getMessages = () =>
-    dataRequest(messagesRoue, {
-      method: 'GET',
-      headers: myHeaders,
-      redirect: 'follow',
-    }).then(messages => JSON.parse(messages));
-
-const postDataUser = userName =>
-    dataRequest(userRoue, {
-      method: 'post',
-      headers: myHeaders,
-      mode: 'cors',
-      body: JSON.stringify({
-        name: userName,
-        avatar: 'IMAGE',
-      }),
+function* postDataUser(userName) {
+    yield call(() => {
+        return fetch(`${host}${userRoue}`, {
+            method: 'post',
+            headers: myHeaders,
+            mode: 'cors',
+            body: JSON.stringify({
+                name: userName,
+                avatar: 'IMAGE',
+            }),
+        });
     });
+}
 
-const postMessage = (newMessage, userId, userName) =>
-    dataRequest(messageRoue, {
-      method: 'post',
-      headers: myHeaders,
-      mode: 'cors',
-      body: JSON.stringify({
-        message: newMessage,
-        userId,
-        userName,
-      }),
+function* postMessage(newMessage, userId, userName) {
+    yield call(() => {
+        return fetch(`${host}${messageRoue}`, {
+            method: 'post',
+            headers: myHeaders,
+            mode: 'cors',
+            body: JSON.stringify({
+                message: newMessage,
+                userId,
+                userName,
+            }),
+        });
     });
+}
 
 export function* init() {
   const getMess = yield call(getMessages);
