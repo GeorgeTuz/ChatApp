@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { addOpenModal, addRedirect, addUserName, signIn } from '../../store/actions/actions';
+import { addOpenModalAction, addRedirectAction, addUserNameAction, signInAction } from '../../store/actions/actions';
 import Auth from './Auth';
 
 const mapStateToProps = state => ({
@@ -9,10 +9,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  addUserNameDis: userName => dispatch(addUserName(userName)),
-  addRedirectDis: redirect => dispatch(addRedirect(redirect)),
-  addOpenModalDis: isModalOpen => dispatch(addOpenModal(isModalOpen)),
-  signIn: () => dispatch(signIn()),
+  addUserNameDis: userName => dispatch(addUserNameAction(userName)),
+  addRedirectDis: redirect => dispatch(addRedirectAction(redirect)),
+  addOpenModalDis: isModalOpen => dispatch(addOpenModalAction(isModalOpen)),
+  signIn: () => dispatch(signInAction()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Auth);

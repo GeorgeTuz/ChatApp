@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import editMessageImg from '../../assets/editMessageIcon.png';
+import editMessageImg from '../../assets/editMessage.svg';
 
 const useStyles = () => ({
   messageUser: {
@@ -20,8 +20,8 @@ const useStyles = () => ({
     alignSelf: 'flex-end',
   },
   editMessageButton: {
-    width: '13px',
-    height: '13px',
+    width: '11px',
+    height: '11px',
     position: 'absolute',
     top: '5px',
     right: '7px',

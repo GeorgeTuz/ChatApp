@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { sendMessages } from '../../store/actions/actions';
+import { sendMessagesAction } from '../../store/actions/actions';
 import { getMessagesReselect } from '../../store/selectors/chat.selector';
 import Chat from './Chat';
 
@@ -8,7 +8,7 @@ export const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  sendMessages: messages => dispatch(sendMessages(messages)),
+  sendMessages: messages => dispatch(sendMessagesAction(messages)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Chat);
