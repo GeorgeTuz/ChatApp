@@ -35,7 +35,7 @@ function* getMessages() {
         });
     });
     let messages = yield response.text();
-    return yield JSON.parse(messages);
+    return JSON.parse(messages);
 }
 
 function* postDataUser(userName) {
