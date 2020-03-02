@@ -32,10 +32,16 @@ const useStyles = () => ({
     backgroundRepeat: 'no-repeat',
     border: 'none',
     outline: 'none',
+    cursor: 'pointer',
   },
 });
 
 class MessageUser extends React.Component {
+  editMessage = () => {
+    this.props.editMessageDis(this.props.message);
+    this.props.idMessageDis(this.props.idMessage);
+  };
+
   render() {
     const { classes } = this.props;
     const { message } = this.props;
@@ -43,7 +49,12 @@ class MessageUser extends React.Component {
       <div className={classes.messageContainerUser}>
         <div className={classes.messageUser}>
           {message}
-          <button type="button" className={classes.editMessageButton} aria-label="Edit Message" />
+          <button
+            type="button"
+            className={classes.editMessageButton}
+            aria-label="Edit Message"
+            onClick={this.editMessage}
+          />
         </div>
       </div>
     );
@@ -53,11 +64,17 @@ class MessageUser extends React.Component {
 MessageUser.propTypes = {
   message: PropTypes.string,
   classes: PropTypes.object,
+  idMessage: PropTypes.string,
+  editMessageDis: PropTypes.func,
+  idMessageDis: PropTypes.func,
 };
 
 MessageUser.defaultProps = {
   classes: {},
   message: '',
+  idMessage: '',
+  editMessageDis: () => {},
+  idMessageDis: () => {},
 };
 
 export default withStyles(useStyles)(MessageUser);

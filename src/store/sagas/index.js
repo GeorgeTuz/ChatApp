@@ -11,6 +11,7 @@ const userRoue = '/user';
 const messageRoue = '/message';
 
 const getUserNameSelect = state => state.auth.userName;
+const getIdMessage = state => state.chat.idMessage;
 
 function* setDataUsersInLocalStorage() {
   const response = yield call(() =>
@@ -26,7 +27,7 @@ function* setDataUsersInLocalStorage() {
   localStorage.setItem('userName', usersList[usersList.length - 1].name);
 }
 
-function* getMessages() {
+export function* getMessages() {
   const response = yield call(() =>
     fetch(`${host}${messagesRoue}`, {
       method: 'GET',
@@ -62,6 +63,20 @@ function* postMessage(newMessage, userId, userName) {
         message: newMessage,
         userId,
         userName,
+      }),
+    })
+  );
+}
+
+function* editMessage(newMessage, idMessage) {
+  yield call(() =>
+    fetch(`${host}${messageRoue}`, {
+      method: 'put',
+      headers: myHeaders,
+      mode: 'cors',
+      body: JSON.stringify({
+        message: newMessage,
+        id: idMessage,
       }),
     })
   );
@@ -103,6 +118,19 @@ export function* signInWatcher() {
   yield takeEvery('SIGN_IN', signInWorker);
 }
 
+function* editMessageWorker(action) {
+  console.log('SAGA EDIT MESS');
+  const idMessage = yield select(getIdMessage);
+  yield call(editMessage, action.payload, idMessage);
+  const getMess = yield call(getMessages);
+  yield put(addMessagesAction(getMess));
+}
+
+export function* editMessageWatcher() {
+  console.log('SAGA EDIT MESS WATHER');
+  yield takeEvery('EDIT_MESSAGE_FUNC', editMessageWorker);
+}
+
 export default function* rootSaga() {
-  yield all([init(), sendMessagesWatcher(), signInWatcher()]);
+  yield all([init(), sendMessagesWatcher(), signInWatcher(), editMessageWatcher()]);
 }

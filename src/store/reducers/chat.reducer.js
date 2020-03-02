@@ -1,6 +1,9 @@
-import { ADD_MESSAGES, ADD_NEW_MESSAGE } from '../actions/actions';
+import { ADD_MESSAGES, ADD_NEW_MESSAGE, EDIT_MESSAGE, ID_MESSAGE } from '../actions/actions';
 
-export default function chat(state = { messages: [], newMessage: '' }, { type, payload }) {
+export default function chat(
+  state = { messages: [], newMessage: '', editMessage: '', idMessage: '' },
+  { type, payload }
+) {
   switch (type) {
     case ADD_MESSAGES:
       return {
@@ -11,6 +14,16 @@ export default function chat(state = { messages: [], newMessage: '' }, { type, p
       return {
         ...state,
         newMessage: payload,
+      };
+    case EDIT_MESSAGE:
+      return {
+        ...state,
+        editMessage: payload,
+      };
+    case ID_MESSAGE:
+      return {
+        ...state,
+        idMessage: payload,
       };
     default:
       return state;

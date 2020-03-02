@@ -65,11 +65,9 @@ router.post('/message', (req, res) => {
   });
 });
 
-router.put('/message/:id', (req, res) => {
-  Message.findByIdAndUpdate({ _id: req.params.id }, req.body).then(() => {
-    Message.findOne({ _id: req.params.id }).then(message => {
-      res.send(message);
-    });
+router.put('/message', (req, res) => {
+  Message.update({ id: req.body.id }, { $set: { message: req.body.message } }).then(message => {
+    res.send(message);
   });
 });
 
