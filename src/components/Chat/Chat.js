@@ -48,7 +48,7 @@ class Chat extends React.Component {
     const messagesBlock = this.messageBlock.current;
     const heightMessageBox = messagesBlock.scrollHeight;
     messagesBlock.scrollTo(0, heightMessageBox);
-    if (prevState.editMessage !== this.state.editMessage) {
+    if (prevState.editMessage !== this.state.editMessage && this.state.editMessage) {
       this.setState({ newMessage: this.state.editMessage, isEdit: true });
     }
   }
