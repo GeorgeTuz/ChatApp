@@ -48,13 +48,10 @@ class Chat extends React.Component {
     const messagesBlock = this.messageBlock.current;
     const heightMessageBox = messagesBlock.scrollHeight;
     messagesBlock.scrollTo(0, heightMessageBox);
-    if (prevState.editMessage !== this.state.editMessage && this.state.editMessage) {
-      this.setState({ newMessage: this.state.editMessage, isEdit: true });
-    }
   }
 
   updateData = (editMessage, idMessage) => {
-    this.setState({ editMessage, idMessage });
+    this.setState({ editMessage, idMessage, newMessage: editMessage, isEdit: true });
   };
 
   handleChange = event => {
@@ -71,9 +68,8 @@ class Chat extends React.Component {
         this.setState({ newMessage: '', isEdit: false, editMessage: '' });
       } else {
         this.props.sendMessages(newMessage);
-        this.setState({ newMessage: '', isEdit: false });
+        this.setState({ newMessage: ''});
       }
-      this.setState({ isEdit: false });
     } else {
       this.setState({ isValid: false });
     }
