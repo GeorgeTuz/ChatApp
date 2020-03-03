@@ -38,8 +38,7 @@ const useStyles = () => ({
 
 class MessageUser extends React.Component {
   editMessage = () => {
-    this.props.editMessageDis(this.props.message);
-    this.props.idMessageDis(this.props.idMessage);
+    this.props.updateData(this.props.message, this.props.idMessage);
   };
 
   render() {
@@ -64,17 +63,15 @@ class MessageUser extends React.Component {
 MessageUser.propTypes = {
   message: PropTypes.string,
   classes: PropTypes.object,
+  updateData: PropTypes.func,
   idMessage: PropTypes.string,
-  editMessageDis: PropTypes.func,
-  idMessageDis: PropTypes.func,
 };
 
 MessageUser.defaultProps = {
   classes: {},
   message: '',
+  updateData: () => {},
   idMessage: '',
-  editMessageDis: () => {},
-  idMessageDis: () => {},
 };
 
 export default withStyles(useStyles)(MessageUser);

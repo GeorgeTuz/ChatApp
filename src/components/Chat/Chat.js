@@ -31,6 +31,8 @@ class Chat extends React.Component {
       newMessage: '',
       isValid: true,
       isEdit: false,
+      editMessage: '',
+      idMessage: '',
     };
 
     this.messageBlock = React.createRef();
@@ -42,29 +44,31 @@ class Chat extends React.Component {
     messagesBlock.scrollTo(0, heightMessageBox);
   }
 
-  componentDidUpdate(prev) {
+  componentDidUpdate(prevProps, prevState) {
     const messagesBlock = this.messageBlock.current;
     const heightMessageBox = messagesBlock.scrollHeight;
     messagesBlock.scrollTo(0, heightMessageBox);
-    if (prev.editMessage !== this.props.editMessage) {
-      this.setState({ newMessage: this.props.editMessage, isEdit: true });
+    if (prevState.editMessage !== this.state.editMessage) {
+      this.setState({ newMessage: this.state.editMessage, isEdit: true });
     }
   }
+
+  updateData = (editMessage, idMessage) => {
+    this.setState({ editMessage, idMessage });
+  };
 
   handleChange = event => {
     this.setState({ newMessage: event.target.value, isValid: true });
   };
 
   handleSubmit = event => {
-    let { newMessage, isEdit } = this.state;
+    let { newMessage, isEdit, idMessage } = this.state;
     event.preventDefault();
     newMessage = newMessage.replace(/^\s*/, '').replace(/\s*$/, '');
     if (newMessage) {
       if (isEdit) {
-        console.log('EDIT');
-        this.props.editMessageFunc(newMessage);
-        this.props.editMessageDis('');
-        this.setState({ newMessage: '', isEdit: false });
+        this.props.editMessage(newMessage, idMessage);
+        this.setState({ newMessage: '', isEdit: false, editMessage: '' });
       } else {
         this.props.sendMessages(newMessage);
         this.setState({ newMessage: '', isEdit: false });
@@ -93,6 +97,7 @@ class Chat extends React.Component {
                   message={message.message}
                   userName={message.userName}
                   idMessage={message.id}
+                  updateData={this.updateData}
                 />
               ) : (
                 <MessageOther key={message.id} message={message.message} userName={message.userName} />
@@ -112,19 +117,15 @@ class Chat extends React.Component {
 
 Chat.propTypes = {
   messages: PropTypes.array.isRequired,
-  editMessage: PropTypes.string,
   classes: PropTypes.object,
   sendMessages: PropTypes.func,
-  editMessageFunc: PropTypes.func,
-  editMessageDis: PropTypes.func,
+  editMessage: PropTypes.func,
 };
 
 Chat.defaultProps = {
   classes: {},
-  editMessage: '',
   sendMessages: () => {},
-  editMessageFunc: () => {},
-  editMessageDis: () => {},
+  editMessage: () => {},
 };
 
 export default withStyles(useStyles)(Chat);

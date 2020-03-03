@@ -11,7 +11,6 @@ const userRoue = '/user';
 const messageRoue = '/message';
 
 const getUserNameSelect = state => state.auth.userName;
-const getIdMessage = state => state.chat.idMessage;
 
 function* setDataUsersInLocalStorage() {
   const response = yield call(() =>
@@ -119,16 +118,13 @@ export function* signInWatcher() {
 }
 
 function* editMessageWorker(action) {
-  console.log('SAGA EDIT MESS');
-  const idMessage = yield select(getIdMessage);
-  yield call(editMessage, action.payload, idMessage);
+  yield call(editMessage, action.payload, action.idMessage);
   const getMess = yield call(getMessages);
   yield put(addMessagesAction(getMess));
 }
 
 export function* editMessageWatcher() {
-  console.log('SAGA EDIT MESS WATHER');
-  yield takeEvery('EDIT_MESSAGE_FUNC', editMessageWorker);
+  yield takeEvery('EDIT_MESSAGE', editMessageWorker);
 }
 
 export default function* rootSaga() {
