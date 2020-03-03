@@ -19,7 +19,7 @@ const useStyles = () => ({
     justifyContent: 'center',
     alignItems: 'center',
     paddingLeft: '60px',
-    width: '570px',
+    width: '515px',
   },
   photoUserHeader: {
     width: '50px',
@@ -30,6 +30,13 @@ const useStyles = () => ({
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
   },
+  buttonSave: {
+    textDecoration: 'none',
+    color: 'rgb(66, 66, 66)',
+    padding: '3px',
+    margin: '15px 5px',
+    backgroundColor: '#cecdcd',
+  }
 });
 
 class HeaderChat extends React.PureComponent {
@@ -41,6 +48,7 @@ class HeaderChat extends React.PureComponent {
     return (
       <div className={classes.headerChat}>
         <div className={classes.userNameHeader}>{userName}</div>
+        <a className={classes.buttonSave} href={avatar} download={'avatarImage.jpg'}>save</a>
         <div className={classes.photoUserHeader} style={style} />
       </div>
     );
