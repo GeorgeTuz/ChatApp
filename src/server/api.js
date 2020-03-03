@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get('/users', (req, res) => {
   User.find({}).then(users => {
-    const newUsers = users.map(({ id, name }) => ({ id, name }));
+    const newUsers = users.map(({ id, name, avatar }) => ({ id, name, avatar }));
     res.send(newUsers);
   });
 });
@@ -16,6 +16,7 @@ router.post('/user', (req, res) => {
   const newUser = {
     id: uuidv1(),
     name: req.body.name,
+    avatar: req.body.avatar,
   };
   User.create(newUser).then(user => {
     res.send(user);

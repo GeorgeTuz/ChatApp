@@ -44,7 +44,7 @@ class Chat extends React.Component {
     messagesBlock.scrollTo(0, heightMessageBox);
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate() {
     const messagesBlock = this.messageBlock.current;
     const heightMessageBox = messagesBlock.scrollHeight;
     messagesBlock.scrollTo(0, heightMessageBox);
@@ -68,7 +68,7 @@ class Chat extends React.Component {
         this.setState({ newMessage: '', isEdit: false, editMessage: '' });
       } else {
         this.props.sendMessages(newMessage);
-        this.setState({ newMessage: ''});
+        this.setState({ newMessage: '' });
       }
     } else {
       this.setState({ isValid: false });

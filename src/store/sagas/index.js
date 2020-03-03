@@ -24,6 +24,7 @@ function* setDataUsersInLocalStorage() {
   const usersList = JSON.parse(result);
   localStorage.setItem('userId', usersList[usersList.length - 1].id);
   localStorage.setItem('userName', usersList[usersList.length - 1].name);
+  localStorage.setItem('avatar', usersList[usersList.length - 1].avatar);
 }
 
 export function* getMessages() {
@@ -38,7 +39,7 @@ export function* getMessages() {
   return JSON.parse(messages);
 }
 
-function* postDataUser(userName) {
+function* postDataUser(userName, image) {
   yield call(() =>
     fetch(`${host}${userRoue}`, {
       method: 'post',
@@ -46,7 +47,7 @@ function* postDataUser(userName) {
       mode: 'cors',
       body: JSON.stringify({
         name: userName,
-        avatar: 'IMAGE',
+        avatar: image,
       }),
     })
   );
@@ -99,13 +100,13 @@ export function* sendMessagesWatcher() {
   yield takeEvery('SEND_MESSAGE', sendMessagesWorker);
 }
 
-function* signInWorker() {
+function* signInWorker(action) {
   const userName = yield select(getUserNameSelect);
   const validation = userName.match(/[A-Za-z0-9]+/);
   if (!validation) {
     yield put(addOpenModalAction(true));
   } else if (validation[0].length === userName.length) {
-    yield call(postDataUser, userName);
+    yield call(postDataUser, userName, action.payload);
     yield call(setDataUsersInLocalStorage);
     yield put(addRedirectAction('/chat'));
   } else {

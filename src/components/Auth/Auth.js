@@ -59,7 +59,7 @@ const useStyles = () => ({
 class Auth extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { file: '', imagePreviewUrl: '' };
+    this.state = { imagePreviewUrl: '' };
   }
 
   handleClose = () => {
@@ -72,28 +72,16 @@ class Auth extends React.Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    this.props.signIn();
+    this.props.signIn(this.state.imagePreviewUrl);
   };
 
-  _handleSubmit(e) {
-    e.preventDefault();
-    console.log('handle uploading-', this.state.file);
-  }
-
-  _handleImageChange(e) {
+  handleImageChange(e) {
     e.preventDefault();
 
     const reader = new FileReader();
-    const file = e.target.files[0];
     reader.onloadend = () => {
-      this.setState({
-        file,
-        imagePreviewUrl: reader.result,
-      });
-      console.log(reader.result);
+      this.setState({ imagePreviewUrl: reader.result });
     };
-
-    reader.readAsDataURL(file);
   }
 
   render() {
@@ -128,10 +116,7 @@ class Auth extends React.Component {
                   value={userName}
                   onChange={this.handleChange}
                 />
-                <input type="file" onChange={e => this._handleImageChange(e)} />
-                <button type="submit" onClick={e => this._handleSubmit(e)}>
-                  Upload Image
-                </button>
+                <input type="file" onChange={e => this.handleImageChange(e)} />
                 <img className={classes.avatarPreview} src={this.state.imagePreviewUrl} alt="avatar" />
                 <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
                   Sign In

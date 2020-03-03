@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import userAvatar from '../../assets/avatar.jpg';
 
 const useStyles = () => ({
   headerChat: {
@@ -23,7 +22,6 @@ const useStyles = () => ({
     width: '570px',
   },
   photoUserHeader: {
-    backgroundImage: `url(${userAvatar})`,
     width: '50px',
     height: '50px',
     borderRadius: '50%',
@@ -38,10 +36,12 @@ class HeaderChat extends React.PureComponent {
   render() {
     const { classes } = this.props;
     const { userName } = this.props;
+    const avatar = localStorage.getItem('avatar');
+    const style = { backgroundImage: `url(${avatar})` };
     return (
       <div className={classes.headerChat}>
         <div className={classes.userNameHeader}>{userName}</div>
-        <div className={classes.photoUserHeader} />
+        <div className={classes.photoUserHeader} style={style} />
       </div>
     );
   }

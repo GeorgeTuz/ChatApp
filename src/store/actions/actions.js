@@ -21,8 +21,8 @@ export function addOpenModalAction(open) {
 export function sendMessagesAction(messages) {
   return { type: SEND_MESSAGE, payload: messages };
 }
-export function signInAction() {
-  return { type: SIGN_IN, payload: null };
+export function signInAction(image) {
+  return { type: SIGN_IN, payload: image };
 }
 export function editMessageAction(newMessage, idMessage) {
   return { type: EDIT_MESSAGE, payload: newMessage, idMessage };
