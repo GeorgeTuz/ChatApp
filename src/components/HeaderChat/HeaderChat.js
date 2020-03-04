@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import notAvatar from './../../assets/notAvatar.jpg'
+import notAvatar from '../../assets/notAvatar.jpg';
 
 const useStyles = () => ({
   headerChat: {
@@ -38,7 +38,7 @@ const useStyles = () => ({
     margin: '15px 5px',
     backgroundColor: '#cecdcd',
     cursor: 'pointer',
-  }
+  },
 });
 
 class HeaderChat extends React.PureComponent {
@@ -46,18 +46,20 @@ class HeaderChat extends React.PureComponent {
     super(props);
     this.buttonSave = React.createRef();
   }
+
   clickSaveButton = () => {
     const buttonSave = this.buttonSave.current;
     buttonSave.removeAttribute('href', '');
     buttonSave.removeAttribute('download');
     let avatar = localStorage.getItem('avatar');
     if (!avatar) avatar = notAvatar;
-    let isSave = window.confirm("Did you want to save this image?");
+    const isSave = window.confirm('Did you want to save this image?');
     if (isSave) {
       buttonSave.setAttribute('href', avatar);
       buttonSave.setAttribute('download', 'avatarImage.jpg');
     }
   };
+
   render() {
     const { classes } = this.props;
     const { userName } = this.props;
@@ -67,7 +69,9 @@ class HeaderChat extends React.PureComponent {
     return (
       <div className={classes.headerChat}>
         <div className={classes.userNameHeader}>{userName}</div>
-        <a className={classes.buttonSave} onClick={this.clickSaveButton} ref={this.buttonSave} href={avatar}>save</a>
+        <a className={classes.buttonSave} onClick={this.clickSaveButton} ref={this.buttonSave} href={avatar}>
+          save
+        </a>
         <div className={classes.photoUserHeader} style={style} />
       </div>
     );

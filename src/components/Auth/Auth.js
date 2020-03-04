@@ -78,10 +78,12 @@ class Auth extends React.Component {
   handleImageChange(e) {
     e.preventDefault();
 
+    const file = e.target.files[0];
     const reader = new FileReader();
     reader.onloadend = () => {
       this.setState({ imagePreviewUrl: reader.result });
     };
+    reader.readAsDataURL(file);
   }
 
   render() {
