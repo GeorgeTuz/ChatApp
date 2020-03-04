@@ -12,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import imageAuth from '../../assets/authImage.jpg';
 import ModalWindow from '../ModalWindow/ModalWindow';
+import notAvatar from '../../assets/notAvatar.jpg';
 
 const useStyles = () => ({
   '@global': {
@@ -53,13 +54,25 @@ const useStyles = () => ({
   avatarPreview: {
     width: '50px',
     height: '50px',
+    marginTop: '14px',
+  },
+  loadImageButton: {
+    width: '120px',
+    height: '30px',
+    backgroundColor: '#3f51b5',
+    color: 'white',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
 class Auth extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { imagePreviewUrl: '' };
+    this.state = { imagePreviewUrl: notAvatar };
   }
 
   handleClose = () => {
@@ -77,13 +90,26 @@ class Auth extends React.Component {
 
   handleImageChange(e) {
     e.preventDefault();
-
+    function validFileType(imageFile) {
+      const fileTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/heic'];
+      for (let i = 0; i < fileTypes.length; i++) {
+        if (imageFile.type === fileTypes[i]) {
+          return true;
+        }
+      }
+      return false;
+    }
     const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      this.setState({ imagePreviewUrl: reader.result });
-    };
-    reader.readAsDataURL(file);
+    if (validFileType(file)) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        this.setState({ imagePreviewUrl: reader.result });
+      };
+      reader.readAsDataURL(file);
+    } else {
+      this.setState({ imagePreviewUrl: notAvatar });
+      window.alert('Unsupported extention! Supported types .jpg, .png, .heic');
+    }
   }
 
   render() {
@@ -91,6 +117,7 @@ class Auth extends React.Component {
     if (redirect) {
       return <Redirect to={redirect} />;
     }
+    const style = { opacity: 0, height: '1px', width: '1px' };
     return (
       <div>
         <Grid container component="main" className={classes.formInput}>
@@ -118,8 +145,17 @@ class Auth extends React.Component {
                   value={userName}
                   onChange={this.handleChange}
                 />
-                <input type="file" onChange={e => this.handleImageChange(e)} />
                 <img className={classes.avatarPreview} src={this.state.imagePreviewUrl} alt="avatar" />
+                <label className={classes.loadImageButton} htmlFor="image_uploads">
+                  Choose images
+                </label>
+                <input
+                  type="file"
+                  id="image_uploads"
+                  onChange={e => this.handleImageChange(e)}
+                  accept=".jpg, .jpeg, .png, .heic"
+                  style={style}
+                />
                 <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
                   Sign In
                 </Button>
