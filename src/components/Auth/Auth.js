@@ -90,26 +90,28 @@ class Auth extends React.Component {
 
   handleImageChange(e) {
     e.preventDefault();
-    function validFileType(imageFile) {
-      const fileTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/heic'];
-      for (let i = 0; i < fileTypes.length; i++) {
-        if (imageFile.type === fileTypes[i]) {
-          return true;
-        }
-      }
-      return false;
+    const MAGIC_NUMBERS = {
+      jpg: 'ffd8ffe0',
+      jpg1: 'ffd8ffe1',
+      png: '541391c3',
+      heic: 'b7eb2dad'
+    };
+    function validFileType(magic) {
+      return magic === MAGIC_NUMBERS.jpg || magic === MAGIC_NUMBERS.jpg1 || magic === MAGIC_NUMBERS.png || magic === MAGIC_NUMBERS.heic;
     }
     const file = e.target.files[0];
-    if (validFileType(file)) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      let fileBuffer = Buffer.from(reader.result, 'base64');
+      let magic = fileBuffer.toString('hex', 15, 19);
+      if (validFileType(magic)) {
         this.setState({ imagePreviewUrl: reader.result });
-      };
-      reader.readAsDataURL(file);
-    } else {
-      this.setState({ imagePreviewUrl: notAvatar });
-      window.alert('Unsupported extention! Supported types .jpg, .png, .heic');
-    }
+      } else {
+        this.setState({ imagePreviewUrl: notAvatar });
+        window.alert('Unsupported extention! Supported types .jpg, .png, .heic');
+      }
+    };
+    reader.readAsDataURL(file);
   }
 
   render() {
