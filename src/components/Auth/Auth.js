@@ -1,6 +1,6 @@
 import React from 'react';
-import './Auth.css';
-import {Redirect} from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { Redirect } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -9,69 +9,133 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
+import { withStyles } from '@material-ui/core/styles';
+import imageAuth from '../../assets/authImage.jpg';
+import ModalWindow from '../ModalWindow/ModalWindow';
+import notAvatar from '../../assets/notAvatar.jpg';
 
+const useStyles = () => ({
+  '@global': {
+    '.MuiGrid-container': {
+      height: '100vh',
+    },
+    '.MuiPaper-root': {
+      display: 'flex',
+      alignItems: 'center',
+    },
+    '.Auth-paper-3': {
+      padding: '8px 4px',
+      margin: 0,
+    },
+  },
+  image: {
+    backgroundImage: `url(${imageAuth})`,
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+  },
+  paper: {
+    margin: '8px 4px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    width: '100%',
+  },
+  avatar: {
+    margin: '1px',
+  },
+  form: {
+    width: '100%',
+    marginTop: '1px',
+  },
+  submit: {
+    margin: '3px 0px 2px',
+  },
+  avatarPreview: {
+    width: '50px',
+    height: '50px',
+    marginTop: '14px',
+  },
+  loadImageButton: {
+    width: '120px',
+    height: '30px',
+    backgroundColor: '#3f51b5',
+    color: 'white',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 
 class Auth extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {userName: '', redirect: null};
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.state = { imagePreviewUrl: notAvatar };
   }
 
-  handleChange(event) {
-    this.setState({userName: event.target.value});
-  }
+  handleClose = () => {
+    this.props.addOpenModalDis(false);
+  };
 
-  async handleSubmit(event) {
+  handleChange = event => {
+    this.props.addUserNameDis(event.target.value);
+  };
+
+  handleSubmit = event => {
     event.preventDefault();
-    let myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-    await fetch('http://localhost:4000/api/user', {
-      method: 'post',
-      headers: myHeaders,
-      mode: 'cors',
-      body: JSON.stringify({
-        "name": this.state.userName,
-        "avatar": "IMAGE"
-      })
-    });
-    
-    await fetch('http://localhost:4000/api/users', {
-      method: 'GET',
-      headers: myHeaders,
-      redirect: 'follow'
-    })
-    .then(response => response.text())
-    .then(result => {
-        localStorage.setItem('userId', JSON.parse(result)[JSON.parse(result).length-1].id);
-        localStorage.setItem('userName', JSON.parse(result)[JSON.parse(result).length-1].name);
-    });
+    this.props.signIn(this.state.imagePreviewUrl);
+  };
 
-    this.setState({ redirect: "/chat" });
+  handleImageChange(e) {
+    e.preventDefault();
+    const MAGIC_NUMBERS = {
+      jpg: 'ffd8ffe0',
+      jpg1: 'ffd8ffe1',
+      png: '541391c3',
+      heic: 'b7eb2dad'
+    };
+    function validFileType(magic) {
+      return magic === MAGIC_NUMBERS.jpg || magic === MAGIC_NUMBERS.jpg1 || magic === MAGIC_NUMBERS.png || magic === MAGIC_NUMBERS.heic;
+    }
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      let fileBuffer = Buffer.from(reader.result, 'base64');
+      let magic = fileBuffer.toString('hex', 15, 19);
+      if (validFileType(magic)) {
+        this.setState({ imagePreviewUrl: reader.result });
+      } else {
+        this.setState({ imagePreviewUrl: notAvatar });
+        window.alert('Unsupported extention! Supported types .jpg, .png, .heic');
+      }
+    };
+    reader.readAsDataURL(file);
   }
-
 
   render() {
-    if (this.state.redirect) {
-        return <Redirect to={this.state.redirect} />
-    }  
+    const { classes, redirect, userName, isModalOpen } = this.props;
+    if (redirect) {
+      return <Redirect to={redirect} />;
+    }
+    const style = { opacity: 0, height: '1px', width: '1px' };
     return (
       <div>
-        <Grid container component="main" className="root">
+        <Grid container component="main" className={classes.formInput}>
           <CssBaseline />
-          <Grid item xs={false} sm={4} md={7} className="image" />
+          <Grid item xs={false} sm={4} md={7} className={classes.image} />
           <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-            <div className="paper">
-              <Avatar >
+            <div className={classes.paper}>
+              <Avatar>
                 <LockOutlinedIcon />
               </Avatar>
               <Typography component="h1" variant="h5">
                 Sign in
               </Typography>
-              <form className="form" onSubmit={this.handleSubmit}>
+              <form className={classes.form} onSubmit={this.handleSubmit}>
                 <TextField
+                  ref={this.inputRef}
                   variant="outlined"
                   margin="normal"
                   required
@@ -79,29 +143,52 @@ class Auth extends React.Component {
                   id="name"
                   label="Your Name"
                   name="name"
-                  autoFocus 
-                  value={this.state.userName} 
+                  autoFocus
+                  value={userName}
                   onChange={this.handleChange}
                 />
-
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  color="primary"
-                  className="submit"
-                >
+                <img className={classes.avatarPreview} src={this.state.imagePreviewUrl} alt="avatar" />
+                <label className={classes.loadImageButton} htmlFor="image_uploads">
+                  Choose images
+                </label>
+                <input
+                  type="file"
+                  id="image_uploads"
+                  onChange={e => this.handleImageChange(e)}
+                  accept=".jpg, .jpeg, .png, .heic"
+                  style={style}
+                />
+                <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
                   Sign In
                 </Button>
               </form>
             </div>
           </Grid>
         </Grid>
+        <ModalWindow open={isModalOpen} onClose={this.handleClose} />
       </div>
     );
   }
 }
 
-export default Auth;
+Auth.propTypes = {
+  userName: PropTypes.string,
+  redirect: PropTypes.string,
+  isModalOpen: PropTypes.bool,
+  classes: PropTypes.object,
+  addUserNameDis: PropTypes.func,
+  addOpenModalDis: PropTypes.func,
+  signIn: PropTypes.func,
+};
 
+Auth.defaultProps = {
+  userName: '',
+  redirect: '',
+  isModalOpen: false,
+  classes: {},
+  addUserNameDis: () => {},
+  addOpenModalDis: () => {},
+  signIn: () => {},
+};
 
+export default withStyles(useStyles)(Auth);

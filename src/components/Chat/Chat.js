@@ -1,85 +1,127 @@
 import React from 'react';
-import './Chat.css';
-let userId = localStorage.getItem('userId');
-let userName = localStorage.getItem('userName');
+import PropTypes from 'prop-types';
+import Box from '@material-ui/core/Box';
+import { withStyles } from '@material-ui/core/styles';
+import MessageUser from '../MessageUser';
+import MessageOther from '../MessageOther';
+import HeaderChat from '../HeaderChat';
+import InputChat from '../InputChat';
+
+const useStyles = () => ({
+  chat: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100vh',
+  },
+  messages: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '700px',
+    flex: '1',
+    margin: '0 auto',
+    overflow: 'auto',
+    backgroundColor: 'rgb(252, 252, 252)',
+  },
+});
 
 class Chat extends React.Component {
-    constructor(props) {
+  constructor(props) {
     super(props);
-    this.state = {newMessage: '', messages:[]};
+    this.state = {
+      newMessage: '',
+      isValid: true,
+      isEdit: false,
+      editMessage: '',
+      idMessage: '',
+    };
 
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.messageBlock = React.createRef();
   }
 
   componentDidMount() {
-    let myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-
-    fetch('http://localhost:4000/api/messages', {
-      method: 'GET',
-      headers: myHeaders,
-      redirect: 'follow'
-    })
-    .then(response => response.text())
-    .then(messages => {
-      messages = JSON.parse(messages)
-      this.setState({messages})
-    })
+    const messagesBlock = this.messageBlock.current;
+    const heightMessageBox = messagesBlock.scrollHeight;
+    messagesBlock.scrollTo(0, heightMessageBox);
   }
 
-  handleChange(event) {
-    this.setState({newMessage: event.target.value});
+  componentDidUpdate() {
+    const messagesBlock = this.messageBlock.current;
+    const heightMessageBox = messagesBlock.scrollHeight;
+    messagesBlock.scrollTo(0, heightMessageBox);
   }
 
-  async handleSubmit(event) {
+  updateData = (editMessage, idMessage) => {
+    this.setState({ editMessage, idMessage, newMessage: editMessage, isEdit: true });
+  };
+
+  handleChange = event => {
+    this.setState({ newMessage: event.target.value, isValid: true });
+  };
+
+  handleSubmit = event => {
+    let { newMessage, isEdit, idMessage } = this.state;
     event.preventDefault();
-    let myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-    
-    await fetch('http://localhost:4000/api/message', {
-      method: 'post',
-      headers: myHeaders,
-      mode: 'cors',
-      body: JSON.stringify({
-        "message": this.state.newMessage,
-        "userId": userId,
-        "userName": userName
-      })
-    });
-    await fetch('http://localhost:4000/api/messages', {
-      method: 'GET',
-      headers: myHeaders,
-      redirect: 'follow'
-    })
-    .then(response => response.text())
-    .then(messages => {
-      messages = JSON.parse(messages)
-      this.setState({messages})
-    })
-    this.setState({ newMessage: '' })
-  }
-  
-    render() {
-      
-      return (
-        <div className="chat">
-          <div className="messages">
-          {this.state.messages.map(message => {
-            return (message.userId === userId) ? <div className="user-message">{message.message}</div> :
-              <div className="just-message">{message.message}</div>
-          
-          })}
-
-          </div>
-          <form onSubmit={this.handleSubmit} className="chat-form">
-            <input type="text" value={this.state.newMessage} onChange={this.handleChange} />
-            <input type="submit" value="Submit" />
-          </form>
-        </div>
-      );
+    newMessage = newMessage.replace(/^\s*/, '').replace(/\s*$/, '');
+    if (newMessage) {
+      if (isEdit) {
+        this.props.editMessage(newMessage, idMessage);
+        this.setState({ newMessage: '', isEdit: false, editMessage: '' });
+      } else {
+        this.props.sendMessages(newMessage);
+        this.setState({ newMessage: '' });
+      }
+    } else {
+      this.setState({ isValid: false });
     }
+  };
+
+  render() {
+    const { classes, messages } = this.props;
+    const userId = localStorage.getItem('userId');
+    const userName = localStorage.getItem('userName');
+
+    return (
+      <div className={classes.chat}>
+        <HeaderChat userName={userName} />
+        <Box className={classes.messages} ref={this.messageBlock}>
+          {messages &&
+            messages.map(message => {
+              const isUserOwnMessage = message.userId === userId;
+              return isUserOwnMessage ? (
+                <MessageUser
+                  key={message.id}
+                  message={message.message}
+                  userName={message.userName}
+                  idMessage={message.id}
+                  updateData={this.updateData}
+                />
+              ) : (
+                <MessageOther key={message.id} message={message.message} userName={message.userName} />
+              );
+            })}
+        </Box>
+        <InputChat
+          value={this.state.newMessage}
+          isValid={this.state.isValid}
+          onChange={this.handleChange}
+          onSubmit={this.handleSubmit}
+        />
+      </div>
+    );
   }
-  
-  export default Chat;
+}
+
+Chat.propTypes = {
+  messages: PropTypes.array.isRequired,
+  classes: PropTypes.object,
+  sendMessages: PropTypes.func,
+  editMessage: PropTypes.func,
+};
+
+Chat.defaultProps = {
+  classes: {},
+  sendMessages: () => {},
+  editMessage: () => {},
+};
+
+export default withStyles(useStyles)(Chat);
